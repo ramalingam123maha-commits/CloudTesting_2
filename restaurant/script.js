@@ -1,8 +1,8 @@
-/* ===============================================
+/* =============================================
    Spicy Kitchen — script.js
-   =============================================== */
+   ============================================= */
 
-/* ── 1. Navbar: scroll-sticky + hamburger ──────── */
+/* ── 1. NAVBAR ── */
 (function () {
   const navbar    = document.getElementById('navbar');
   const hamburger = document.getElementById('hamburger');
@@ -10,24 +10,24 @@
 
   if (!navbar) return;
 
-  // Scroll: add/remove .scrolled class
+  /* Scroll → sticky dark-glass */
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 30) {
+    if (window.scrollY > 60) {
       navbar.classList.add('scrolled');
-    } else if (!navbar.classList.contains('force-scrolled')) {
+    } else {
       navbar.classList.remove('scrolled');
     }
   }, { passive: true });
 
-  // Hamburger toggle
+  /* Hamburger open / close */
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
       const open = navLinks.classList.toggle('open');
       hamburger.classList.toggle('open', open);
-      hamburger.setAttribute('aria-expanded', open);
+      hamburger.setAttribute('aria-expanded', String(open));
     });
 
-    // Auto-close on nav link click
+    /* Close menu when a link is clicked */
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         navLinks.classList.remove('open');
@@ -35,18 +35,19 @@
         hamburger.setAttribute('aria-expanded', 'false');
       });
     });
-  }
 
-  // Close on outside click
-  document.addEventListener('click', e => {
-    if (navLinks && !navbar.contains(e.target)) {
-      navLinks.classList.remove('open');
-      hamburger && hamburger.classList.remove('open');
-    }
-  });
+    /* Close when clicking outside */
+    document.addEventListener('click', (e) => {
+      if (!navbar.contains(e.target)) {
+        navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 })();
 
-/* ── 2. Scroll-to-top button ───────────────────── */
+/* ── 2. SCROLL-TO-TOP ── */
 (function () {
   const btn = document.getElementById('scrollTop');
   if (!btn) return;
@@ -60,96 +61,99 @@
   });
 })();
 
-/* ── 3. Scroll-reveal via IntersectionObserver ─── */
+/* ── 3. SCROLL-REVEAL ── */
 (function () {
-  const items = document.querySelectorAll('.reveal');
-  if (!items.length) return;
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
 
-  const observer = new IntersectionObserver(entries => {
+  const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+        io.unobserve(entry.target);
       }
     });
   }, { threshold: 0.12 });
 
-  items.forEach(el => observer.observe(el));
+  els.forEach(el => io.observe(el));
 })();
 
-/* ── 4. Animated stat counters ─────────────────── */
+/* ── 4. ANIMATED STAT COUNTERS ── */
 (function () {
-  const numbers = document.querySelectorAll('.stat-number[data-count]');
-  if (!numbers.length) return;
+  const counters = document.querySelectorAll('.stat-number[data-count]');
+  if (!counters.length) return;
 
   function easeOutCubic(t) {
     return 1 - Math.pow(1 - t, 3);
   }
 
   function animateCounter(el) {
-    const target   = parseInt(el.getAttribute('data-count'), 10);
+    const target   = parseInt(el.dataset.count, 10);
     const duration = 1600;
     const start    = performance.now();
 
     function step(now) {
       const elapsed  = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      const value    = Math.floor(easeOutCubic(progress) * target);
-      el.textContent = value.toLocaleString();
+      el.textContent = Math.floor(easeOutCubic(progress) * target).toLocaleString();
       if (progress < 1) requestAnimationFrame(step);
     }
-
     requestAnimationFrame(step);
   }
 
-  const observer = new IntersectionObserver(entries => {
+  const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         animateCounter(entry.target);
-        observer.unobserve(entry.target);
+        io.unobserve(entry.target);
       }
     });
   }, { threshold: 0.5 });
 
-  numbers.forEach(el => observer.observe(el));
+  counters.forEach(el => io.observe(el));
 })();
 
-/* ── 5. Hero floating particles ────────────────── */
+/* ── 5. HERO FLOATING PARTICLES ── */
 (function () {
   const container = document.getElementById('heroParticles');
   if (!container) return;
 
-  const emojis = ['🌶️','🍛','🍲','🧄','🌿','🍅','🧅','🍋','🥬','🍗','🍚','🥘','🫓','🍮','🍨','🧆','🥗','🍱'];
+  const emojis  = ['🌶️','🍛','🧄','🌿','🍋','🍚','🥩','🫓','🧅','🥘','🌾','🥗','🍢','🫕','🍮','🍵','🌰','🍃'];
   const count   = 18;
 
   for (let i = 0; i < count; i++) {
-    const p    = document.createElement('span');
-    p.classList.add('particle');
-    p.textContent = emojis[i % emojis.length];
+    const el = document.createElement('span');
+    el.className   = 'particle';
+    el.textContent = emojis[i % emojis.length];
 
-    const size = 14 + Math.random() * 18;
-    p.style.cssText = `
+    const size   = Math.random() * 18 + 14;   // 14–32 px
+    const left   = Math.random() * 100;        // 0–100 %
+    const dur    = Math.random() * 14 + 10;    // 10–24 s
+    const delay  = Math.random() * -20;        // stagger starts
+
+    el.style.cssText = `
       font-size: ${size}px;
-      left: ${Math.random() * 100}%;
-      animation-duration: ${10 + Math.random() * 14}s;
-      animation-delay: ${-Math.random() * 14}s;
+      left: ${left}%;
+      animation-duration: ${dur}s;
+      animation-delay: ${delay}s;
     `;
-    container.appendChild(p);
+    container.appendChild(el);
   }
 })();
 
-/* ── 6. Menu filter + scroll-spy ───────────────── */
+/* ── 6. MENU FILTER BAR ── */
 (function () {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  if (!filterBtns.length) return;
+  const btns = document.querySelectorAll('.filter-btn');
+  if (!btns.length) return;
 
-  // Click: scroll to section
-  filterBtns.forEach(btn => {
+  const OFFSET = 140; // px above target (navbar + filter bar height)
+
+  /* Click → scroll to section */
+  btns.forEach(btn => {
     btn.addEventListener('click', () => {
-      const filter = btn.getAttribute('data-filter');
+      const filter = btn.dataset.filter;
 
-      // Activate button
-      filterBtns.forEach(b => b.classList.remove('active'));
+      btns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
       if (filter === 'all') {
@@ -158,174 +162,177 @@
       }
 
       const target = document.getElementById(filter);
-      if (target) {
-        const offset = 140; // navbar + filter bar height
-        const top    = target.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
+      if (!target) return;
+
+      const top = target.getBoundingClientRect().top + window.scrollY - OFFSET;
+      window.scrollTo({ top, behavior: 'smooth' });
     });
   });
 
-  // Scroll-spy: highlight active filter as user scrolls
+  /* Scroll-spy: highlight active filter while scrolling */
   const sections = document.querySelectorAll('[data-category]');
   if (!sections.length) return;
 
-  const spyObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const cat = entry.target.getAttribute('data-category');
-        filterBtns.forEach(b => {
-          b.classList.toggle('active', b.getAttribute('data-filter') === cat);
-        });
+  window.addEventListener('scroll', () => {
+    let current = 'all';
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.25) {
+        current = sec.dataset.category;
       }
     });
-  }, { threshold: 0.25, rootMargin: '-140px 0px -50% 0px' });
 
-  sections.forEach(s => spyObserver.observe(s));
+    btns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filter === current);
+    });
+  }, { passive: true });
 })();
 
-/* ── 7. Add-to-order toast notification ─────────── */
+/* ── 7. CART TOAST ── */
 (function () {
-  // Create toast element
+  /* Create toast element once */
   const toast = document.createElement('div');
-  toast.id = 'cartToast';
+  toast.id    = 'cartToast';
   toast.style.cssText = `
     position: fixed;
     bottom: 80px;
     right: 24px;
     background: linear-gradient(135deg, #e63939, #ff7f2a);
     color: #fff;
-    padding: 14px 22px;
+    padding: 12px 22px;
     border-radius: 50px;
     font-size: .88rem;
     font-weight: 700;
-    box-shadow: 0 6px 24px rgba(230,57,57,.45);
-    z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
     opacity: 0;
-    transform: translateY(16px) scale(.92);
+    transform: translateY(12px);
     transition: opacity .3s ease, transform .3s ease;
     pointer-events: none;
+    z-index: 9999;
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
   `;
   document.body.appendChild(toast);
 
-  let toastTimer = null;
+  let hideTimer = null;
 
-  function showToast(name) {
-    clearTimeout(toastTimer);
-    toast.innerHTML = `<span>🛒</span> "${name}" added to order!`;
-    toast.style.opacity  = '1';
-    toast.style.transform = 'translateY(0) scale(1)';
-
-    toastTimer = setTimeout(() => {
-      toast.style.opacity  = '0';
-      toast.style.transform = 'translateY(16px) scale(.92)';
+  function showToast(itemName) {
+    clearTimeout(hideTimer);
+    toast.textContent = '✓  ' + itemName + ' added to order!';
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+    hideTimer = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(12px)';
     }, 2400);
   }
 
-  document.addEventListener('click', e => {
+  document.addEventListener('click', (e) => {
     const btn = e.target.closest('.add-btn');
     if (!btn) return;
 
-    const card = btn.closest('[class*="dish-card"], [class*="menu-item"]');
-    const name = card ? (card.querySelector('h3') || { textContent: 'Item' }).textContent : 'Item';
-    showToast(name.trim());
+    const card = btn.closest('.menu-item, .dish-card');
+    const name = card ? (card.querySelector('h3') || {}).textContent || 'Item' : 'Item';
 
-    // Brief visual feedback on button
+    /* Brief visual feedback on button */
     btn.textContent = '✓';
-    btn.style.background = '#28b44a';
-    setTimeout(() => {
-      btn.textContent = '+';
-      btn.style.background = '';
-    }, 1200);
+    setTimeout(() => { btn.textContent = '+'; }, 1200);
+
+    showToast(name);
   });
 })();
 
-/* ── 8. Contact form validation ─────────────────── */
+/* ── 8. CONTACT FORM ── */
 (function () {
-  const form       = document.getElementById('contactForm');
-  const successBox = document.getElementById('formSuccess');
-  const resetBtn   = document.getElementById('resetForm');
-
+  const form    = document.getElementById('contactForm');
+  const success = document.getElementById('formSuccess');
+  const reset   = document.getElementById('resetForm');
   if (!form) return;
 
-  function isEmail(val) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  /* ── Validation helpers ── */
+  function getError(field) {
+    return field.parentElement.querySelector('.field-error');
   }
 
-  function getError(field) {
-    let el = field.nextElementSibling;
-    if (!el || !el.classList.contains('field-error')) {
-      el = document.createElement('span');
-      el.className = 'field-error';
-      el.style.cssText = 'display:block;color:#e63939;font-size:.78rem;margin-top:5px;';
-      field.after(el);
+  function showError(field, msg) {
+    let span = getError(field);
+    if (!span) {
+      span = document.createElement('span');
+      span.className = 'field-error';
+      span.style.cssText = 'display:block;font-size:.76rem;color:#e63939;margin-top:4px;';
+      field.parentElement.appendChild(span);
     }
-    return el;
+    span.textContent = msg;
+    field.style.borderColor = '#e63939';
+  }
+
+  function clearError(field) {
+    const span = getError(field);
+    if (span) span.textContent = '';
+    field.style.borderColor = '';
   }
 
   function validateField(field) {
+    clearError(field);
     const val = field.value.trim();
-    const errEl = getError(field);
 
     if (field.required && !val) {
-      errEl.textContent = `${field.labels?.[0]?.textContent.replace(' *','') || 'This field'} is required.`;
-      field.style.borderColor = '#e63939';
+      showError(field, 'This field is required.');
       return false;
     }
-    if (field.type === 'email' && val && !isEmail(val)) {
-      errEl.textContent = 'Please enter a valid email address.';
-      field.style.borderColor = '#e63939';
-      return false;
+    if (field.type === 'email' && val) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!re.test(val)) {
+        showError(field, 'Please enter a valid email address.');
+        return false;
+      }
     }
-    // Clear error
-    errEl.textContent = '';
-    field.style.borderColor = '#28b44a';
     return true;
   }
 
-  // Blur validation
+  /* Live blur validation */
   form.querySelectorAll('input, select, textarea').forEach(field => {
-    field.addEventListener('blur', () => {
-      if (field.name !== 'phone') validateField(field);
+    field.addEventListener('blur', () => validateField(field));
+    field.addEventListener('input', () => {
+      if (getError(field) && getError(field).textContent) validateField(field);
     });
   });
 
-  // Submit
-  form.addEventListener('submit', e => {
+  /* Submit */
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const fields = [...form.querySelectorAll('input[required], select[required], textarea[required]')];
-    const allValid = fields.every(f => validateField(f));
+    const fields  = Array.from(form.querySelectorAll('input, select, textarea'));
+    const allOk   = fields.map(f => validateField(f)).every(Boolean);
+    if (!allOk) return;
 
-    if (!allValid) return;
-
+    /* Simulate async send */
     const submitBtn = form.querySelector('[type="submit"]');
+    submitBtn.disabled  = true;
     submitBtn.textContent = '⏳ Sending…';
-    submitBtn.disabled = true;
 
-    // Simulate async submit
     setTimeout(() => {
-      form.style.display       = 'none';
-      successBox.style.display = 'block';
+      form.style.display = 'none';
+      if (success) success.style.display = 'block';
     }, 1200);
   });
 
-  // Reset
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
+  /* Reset back to form */
+  if (reset) {
+    reset.addEventListener('click', () => {
       form.reset();
-      form.querySelectorAll('.field-error').forEach(el => (el.textContent = ''));
-      form.querySelectorAll('input, select, textarea').forEach(f => (f.style.borderColor = ''));
+      form.querySelectorAll('input, select, textarea').forEach(f => {
+        clearError(f);
+      });
       const submitBtn = form.querySelector('[type="submit"]');
       if (submitBtn) {
-        submitBtn.innerHTML = '<span>✉️</span> Send Message';
         submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>✉️</span> Send Message';
       }
-      form.style.display       = '';
-      successBox.style.display = 'none';
+      success.style.display = 'none';
+      form.style.display    = 'block';
     });
   }
 })();
