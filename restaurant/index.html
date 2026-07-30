@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spicy Kitchen — Love the Food</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌶️</text></svg>" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">🌶️</span>
+        <span class="logo-text">Spicy <span>Kitchen</span></span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="contact.html" class="btn-nav">Reserve Table</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div id="heroParticles" class="hero-particles"></div>
+    <div class="hero-container">
+
+      <!-- Left: text -->
+      <div class="hero-content">
+        <span class="section-badge hero-badge">🌶️ Authentic Indian Cuisine Since 2002</span>
+        <h1 class="hero-title">
+          Taste the <span class="highlight">Bold</span><br />
+          Feel the <span class="highlight">Heat</span><br />
+          Love the <span class="highlight">Food</span>
+        </h1>
+        <p class="hero-tagline">"Love the Food"</p>
+        <p class="hero-desc">
+          Every dish at Spicy Kitchen is crafted with hand-ground spices, farm-fresh ingredients,
+          and more than two decades of culinary passion. Come hungry, leave happy.
+        </p>
+        <div class="hero-actions">
+          <a href="menu.html"    class="btn btn-primary"><span>🍽️</span> Explore Menu</a>
+          <a href="contact.html" class="btn btn-outline"><span>📞</span> Reserve Table</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number" data-count="22">0</span>
+            <span class="stat-label">Years of Flavour</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="50">0</span>
+            <span class="stat-label">Menu Items</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="9800">0</span>
+            <span class="stat-label">Happy Guests</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="4">0</span>
+            <span class="stat-label">★ Rating</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: visual -->
+      <div class="hero-visual">
+        <div class="hero-plate">
+          <div class="hero-orbit">
+            <div class="orbit-item">🌶️</div>
+            <div class="orbit-item">🧄</div>
+            <div class="orbit-item">🌿</div>
+            <div class="orbit-item">🫙</div>
+          </div>
+          <div class="hero-plate-inner">🍛</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:50px;" class="reveal">
+        <span class="section-badge">Why Choose Us</span>
+        <h2 class="section-title" style="margin:14px auto 14px;">What Makes Us <span>Special</span></h2>
+        <div class="divider" style="margin:0 auto;"></div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal delay-1">
+          <span class="feature-icon">🌾</span>
+          <h3>Farm-Fresh Ingredients</h3>
+          <p>We source seasonal vegetables, premium meats, and aromatic herbs directly from trusted local farms every single morning.</p>
+        </div>
+        <div class="feature-card reveal delay-2">
+          <span class="feature-icon">👨‍🍳</span>
+          <h3>Master Chefs</h3>
+          <p>Our chefs bring decades of authentic culinary training from across India — each dish is cooked with expert skill and genuine passion.</p>
+        </div>
+        <div class="feature-card reveal delay-3">
+          <span class="feature-icon">🫙</span>
+          <h3>Hand-Ground Spices</h3>
+          <p>We grind our own spice blends fresh daily — no premixed powders, no shortcuts. Just real flavour from scratch, every time.</p>
+        </div>
+        <div class="feature-card reveal delay-1">
+          <span class="feature-icon">🔥</span>
+          <h3>Authentic Tandoor</h3>
+          <p>Our traditional clay tandoor oven reaches 900°F, giving breads, kebabs, and tikka that iconic smoky char you simply can't fake.</p>
+        </div>
+        <div class="feature-card reveal delay-2">
+          <span class="feature-icon">🥗</span>
+          <h3>Dietary Options</h3>
+          <p>Vegan, vegetarian, gluten-aware — we cater to all lifestyles without ever compromising on taste, texture, or satisfaction.</p>
+        </div>
+        <div class="feature-card reveal delay-3">
+          <span class="feature-icon">⭐</span>
+          <h3>5-Star Experience</h3>
+          <p>From warm hospitality and elegant table settings to lightning-fast service, we ensure every visit becomes a treasured memory.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image-wrap reveal">
+          <div class="about-img-main">👨‍🍳</div>
+          <div class="about-badge-float">
+            <span class="big">22+</span>
+            <span class="small">Years of Excellence</span>
+          </div>
+        </div>
+        <div class="about-content reveal delay-1">
+          <span class="section-badge">Our Story</span>
+          <h2 class="section-title" style="margin:14px 0 14px;">A Legacy of <span>Authentic Flavour</span></h2>
+          <div class="divider" style="margin-bottom:22px;"></div>
+          <p style="color:var(--muted);font-size:.93rem;margin-bottom:22px;line-height:1.8;">
+            Spicy Kitchen was founded in 2002 with a single belief — that great food can change a person's day.
+            Starting as a small family-run kitchen in New York, we've grown into a beloved restaurant without ever
+            losing the soul of home-cooked Indian cooking.
+          </p>
+          <div class="about-points">
+            <div class="about-point"><span class="check">✓</span><span>Recipes passed down through three generations of our founding family</span></div>
+            <div class="about-point"><span class="check">✓</span><span>Ingredients sourced fresh from local farms and specialist spice importers</span></div>
+            <div class="about-point"><span class="check">✓</span><span>Every sauce, marinade, and dough prepared in-house from scratch daily</span></div>
+            <div class="about-point"><span class="check">✓</span><span>Proudly serving 200+ guests per weekend with warmth and consistency</span></div>
+            <div class="about-point"><span class="check">✓</span><span>Award-winning dining experience recognised by the NYC Food &amp; Drink Guide</span></div>
+          </div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <a href="menu.html"    class="btn btn-primary"><span>🍽️</span> View Full Menu</a>
+            <a href="contact.html" class="btn btn-outline"><span>📞</span> Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CHEF SPECIALS ===== -->
+  <section class="specials">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:50px;" class="reveal">
+        <span class="section-badge">Today's Picks</span>
+        <h2 class="section-title" style="margin:14px auto 14px;">Chef's <span>Specials</span></h2>
+        <div class="divider" style="margin:0 auto;"></div>
+      </div>
+      <div class="specials-grid">
+
+        <div class="dish-card reveal delay-1">
+          <div class="dish-img">
+            🍗
+            <span class="dish-badge-tag">Most Popular</span>
+          </div>
+          <div class="dish-body">
+            <h3>Butter Chicken</h3>
+            <p>Our legendary murg makhani — tender tandoor chicken in a velvety tomato-butter-cream sauce. The dish that put us on the map.</p>
+            <div class="dish-footer">
+              <span class="dish-price">$18.99</span>
+              <button class="add-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dish-card reveal delay-2">
+          <div class="dish-img">
+            🍚
+            <span class="dish-badge-tag">Chef's Pick</span>
+          </div>
+          <div class="dish-body">
+            <h3>Hyderabadi Biryani</h3>
+            <p>Saffron-infused basmati layered with slow-cooked mutton, caramelised onions, fresh mint, and whole spices. A celebration in a pot.</p>
+            <div class="dish-footer">
+              <span class="dish-price">$22.99</span>
+              <button class="add-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dish-card reveal delay-3">
+          <div class="dish-img">
+            🧀
+            <span class="dish-badge-tag">Vegetarian ★</span>
+          </div>
+          <div class="dish-body">
+            <h3>Paneer Tikka Masala</h3>
+            <p>Tandoor-chargrilled paneer in a bold, smoky tomato-pepper-masala gravy. The ultimate vegetarian showstopper.</p>
+            <div class="dish-footer">
+              <span class="dish-price">$16.99</span>
+              <button class="add-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dish-card reveal delay-4">
+          <div class="dish-img">
+            🍮
+            <span class="dish-badge-tag">Dessert of the Week</span>
+          </div>
+          <div class="dish-body">
+            <h3>Spiced Choco Lava</h3>
+            <p>Warm dark chocolate fondant with a molten centre, perfumed with cardamom and chilli. Served with mango kulfi.</p>
+            <div class="dish-footer">
+              <span class="dish-price">$9.99</span>
+              <button class="add-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div style="text-align:center;margin-top:40px;" class="reveal">
+        <a href="menu.html" class="btn btn-primary"><span>📋</span> See All 20+ Dishes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:50px;" class="reveal">
+        <span class="section-badge">Guest Reviews</span>
+        <h2 class="section-title" style="margin:14px auto 14px;">What Our Guests <span>Say</span></h2>
+        <div class="divider" style="margin:0 auto;"></div>
+      </div>
+      <div class="testimonials-grid">
+
+        <div class="testimonial-card reveal delay-1">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-text">"The Butter Chicken is simply the best I've ever had — rich, smoky, and perfectly spiced. I've been coming here every Friday for three years!"</p>
+          <div class="t-author">
+            <div class="t-avatar">SM</div>
+            <div>
+              <div class="t-name">Sarah Mitchell</div>
+              <div class="t-role">Food Blogger · NYC</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal delay-2">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-text">"Genuinely the most authentic Indian food I've found outside of India. The Hyderabadi Biryani is absolutely stunning — every grain perfectly cooked."</p>
+          <div class="t-author">
+            <div class="t-avatar">JR</div>
+            <div>
+              <div class="t-name">James Reynolds</div>
+              <div class="t-role">Regular Guest · Brooklyn</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal delay-3">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-text">"We booked for a work event and they catered brilliantly. The team was professional, the food was spectacular, and every single colleague raved about it."</p>
+          <div class="t-author">
+            <div class="t-avatar">AP</div>
+            <div>
+              <div class="t-name">Anika Patel</div>
+              <div class="t-role">Events Manager · Manhattan</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal delay-1">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-text">"The Paneer Tikka and Garlic Naan combo is out of this world. The service is warm, the ambience is lovely — this place always lifts my mood."</p>
+          <div class="t-author">
+            <div class="t-avatar">LW</div>
+            <div>
+              <div class="t-name">Laura Wong</div>
+              <div class="t-role">Architect · Queens</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal delay-2">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-text">"Spicy Kitchen catered our wedding reception and knocked it out of the park. 120 guests, every single dish was impeccable. We couldn't be more grateful!"</p>
+          <div class="t-author">
+            <div class="t-avatar">DK</div>
+            <div>
+              <div class="t-name">David &amp; Karen</div>
+              <div class="t-role">Wedding Clients · New Jersey</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal delay-3">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-text">"I'm vegetarian and the menu is incredible for me — Dal Makhani, Palak Paneer, Cheese Kulcha… I've never felt so spoilt for choice at any restaurant."</p>
+          <div class="t-author">
+            <div class="t-avatar">MN</div>
+            <div>
+              <div class="t-name">Maya Nair</div>
+              <div class="t-role">Teacher · Staten Island</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA BANNER ===== -->
+  <div class="cta-banner">
+    <div class="container reveal">
+      <h2>Hungry? Book Your Table <em>Tonight!</em></h2>
+      <p>Join hundreds of happy guests every week. Reserve your spot now and let us take care of the rest.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="contact.html" class="btn btn-primary"><span>📞</span> Reserve a Table</a>
+        <a href="menu.html"    class="btn btn-outline"><span>🍽️</span> Browse Menu</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-text">🌶️ Spicy <span>Kitchen</span></div>
+          <p>Love the Food. Live the Experience. Spicy Kitchen has been serving bold, authentic Indian flavors since 2002.</p>
+          <div class="social-links">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="Twitter">🐦</a>
+            <a href="#" title="YouTube">▶️</a>
+          </div>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">→ Home</a></li>
+            <li><a href="menu.html">→ Our Menu</a></li>
+            <li><a href="contact.html">→ Contact Us</a></li>
+            <li><a href="contact.html">→ Reserve a Table</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Our Menu</h4>
+          <ul class="footer-links">
+            <li><a href="menu.html#starters">→ Starters</a></li>
+            <li><a href="menu.html#mains">→ Main Course</a></li>
+            <li><a href="menu.html#breads">→ Breads &amp; Rice</a></li>
+            <li><a href="menu.html#desserts">→ Desserts</a></li>
+            <li><a href="menu.html#drinks">→ Drinks</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact Info</h4>
+          <ul class="footer-contact">
+            <li><span>📍</span> 123 Flavor Street, Food Town, NY 10001</li>
+            <li><span>📞</span><a href="tel:+12125550123">+1 (212) 555-0123</a></li>
+            <li><span>✉️</span><a href="mailto:hello@spicykitchen.com">hello@spicykitchen.com</a></li>
+            <li><span>🕐</span> Mon–Sun: 11:00 AM – 11:00 PM</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 <span>Spicy Kitchen</span>. All rights reserved.</p>
+        <p>Made with ❤️ &amp; 🌶️ for food lovers everywhere</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

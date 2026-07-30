@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu — Spicy Kitchen</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌶️</text></svg>" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">🌶️</span>
+        <span class="logo-text">Spicy <span>Kitchen</span></span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html" class="active">Menu</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="contact.html" class="btn-nav">Reserve Table</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HERO ===== -->
+  <header class="menu-hero">
+    <span class="section-badge">Crafted with Passion</span>
+    <h1>Our <span>Full Menu</span></h1>
+    <p>Hand-ground spices, tandoor-fired breads, and classic curries — 20+ dishes made fresh daily.</p>
+  </header>
+
+  <!-- ===== FILTER BAR ===== -->
+  <div class="menu-filters" id="menuFilters">
+    <ul class="filter-list">
+      <li><button class="filter-btn active" data-filter="all">🍽️ All</button></li>
+      <li><button class="filter-btn" data-filter="starters">🥗 Starters</button></li>
+      <li><button class="filter-btn" data-filter="mains">🍛 Mains</button></li>
+      <li><button class="filter-btn" data-filter="breads">🫓 Breads &amp; Rice</button></li>
+      <li><button class="filter-btn" data-filter="desserts">🍮 Desserts</button></li>
+      <li><button class="filter-btn" data-filter="drinks">☕ Drinks</button></li>
+    </ul>
+  </div>
+
+  <!-- ===== MENU ITEMS ===== -->
+  <main style="background:var(--dark3);padding:60px 0 80px;">
+    <div class="container">
+
+      <!-- STARTERS -->
+      <section class="menu-section reveal" id="starters" data-category="starters">
+        <div class="menu-category-title">
+          <span class="cat-icon">🥗</span>
+          <h2>Starters</h2>
+          <div class="cat-line"></div>
+        </div>
+        <div class="menu-items-grid">
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🍢
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+                <span class="tag-spicy">Spicy</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Seekh Kebab</h3>
+              <p>Minced lamb blended with ginger, garlic, cumin, and fresh coriander, skewered and char-grilled in our tandoor oven.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$12.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🧅
+              <div class="menu-item-tags">
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Onion Bhaji</h3>
+              <p>Crispy golden fritters of sliced onion, fresh chilli, and aromatic spices in a light chickpea-flour batter. Served with mint chutney.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$8.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🍗
+              <div class="menu-item-tags">
+                <span class="tag-spicy">Spicy</span>
+                <span class="tag-new">New</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Achari Lamb Chops</h3>
+              <p>Juicy lamb cutlets marinated overnight in pickling spices, yoghurt, and mustard oil — then fired in the clay tandoor.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$15.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🧀
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Paneer Tikka</h3>
+              <p>Chunks of fresh cottage cheese marinated in spiced yoghurt and grilled to perfection. Served on a sizzler with onion and pepper.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$13.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- MAINS -->
+      <section class="menu-section reveal" id="mains" data-category="mains">
+        <div class="menu-category-title">
+          <span class="cat-icon">🍛</span>
+          <h2>Main Course</h2>
+          <div class="cat-line"></div>
+        </div>
+        <div class="menu-items-grid">
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🍗
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Butter Chicken</h3>
+              <p>Tender chicken in a rich, velvety tomato-butter-cream sauce gently spiced with fenugreek, garam masala, and bay leaves.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$18.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🫘
+              <div class="menu-item-tags">
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Dal Makhani</h3>
+              <p>Whole black lentils slow-cooked overnight with butter and cream until meltingly tender — the ultimate vegetarian comfort dish.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$14.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🧀
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Paneer Tikka Masala</h3>
+              <p>Char-grilled paneer in a bold, smoky tomato-pepper masala gravy enriched with cashew cream. Pairs perfectly with naan.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$16.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🍚
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Hyderabadi Biryani</h3>
+              <p>Saffron basmati layered with slow-cooked mutton, crispy onions, fresh mint, and whole spices — the pride of our kitchen.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$22.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🔥
+              <div class="menu-item-tags">
+                <span class="tag-spicy">Spicy</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Chicken Vindaloo</h3>
+              <p>A fiery Goan classic — chicken simmered in a tangy red chilli and vinegar masala with mustard seeds and warming spices. Not for the faint-hearted!</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$17.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🌿
+              <div class="menu-item-tags">
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Palak Paneer</h3>
+              <p>Fresh cottage cheese cubes in a velvety, gently spiced spinach gravy. Packed with flavour, iron, and Indian soul.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$15.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- BREADS & RICE -->
+      <section class="menu-section reveal" id="breads" data-category="breads">
+        <div class="menu-category-title">
+          <span class="cat-icon">🫓</span>
+          <h2>Breads &amp; Rice</h2>
+          <div class="cat-line"></div>
+        </div>
+        <div class="menu-items-grid">
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🫓
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Butter Naan</h3>
+              <p>Pillowy white-flour flatbread baked in our tandoor and brushed generously with melted butter and fresh coriander.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$3.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🧄
+              <div class="menu-item-tags">
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Garlic Naan</h3>
+              <p>Fresh tandoor naan loaded with minced garlic, chopped coriander, and a drizzle of ghee. Dangerously addictive.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$4.49</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🍚
+              <div class="menu-item-tags">
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Jeera Rice</h3>
+              <p>Fragrant long-grain basmati rice tempered with cumin seeds, bay leaves, and a touch of ghee. Light, fluffy perfection.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$5.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🧀
+              <div class="menu-item-tags">
+                <span class="tag-new">New</span>
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Cheese Kulcha</h3>
+              <p>Stuffed leavened flatbread filled with spiced cheese and onion, tandoor-baked and finished with butter and nigella seeds.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$5.49</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- DESSERTS -->
+      <section class="menu-section reveal" id="desserts" data-category="desserts">
+        <div class="menu-category-title">
+          <span class="cat-icon">🍮</span>
+          <h2>Desserts</h2>
+          <div class="cat-line"></div>
+        </div>
+        <div class="menu-items-grid">
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🍯
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Gulab Jamun</h3>
+              <p>Soft, spongy milk-solid dumplings soaked in cardamom-rose sugar syrup. Served warm with a scoop of vanilla ice cream.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$7.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🥭
+              <div class="menu-item-tags">
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Mango Kulfi</h3>
+              <p>Dense, creamy Indian ice cream churned with fresh Alphonso mango pulp, saffron, and pistachios. A timeless classic.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$6.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🍮
+              <div class="menu-item-tags">
+                <span class="tag-new">New</span>
+                <span class="tag-popular">Popular</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Spiced Choco Lava</h3>
+              <p>Warm dark chocolate fondant with a molten centre infused with cardamom and chilli. Served with mango kulfi and rose petals.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$9.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- DRINKS -->
+      <section class="menu-section reveal" id="drinks" data-category="drinks">
+        <div class="menu-category-title">
+          <span class="cat-icon">☕</span>
+          <h2>Drinks</h2>
+          <div class="cat-line"></div>
+        </div>
+        <div class="menu-items-grid">
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              ☕
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Masala Chai</h3>
+              <p>Warming black tea brewed with fresh ginger, cardamom, cinnamon, cloves, and whole milk. The soul of Indian hospitality.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$3.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🥭
+              <div class="menu-item-tags">
+                <span class="tag-popular">Popular</span>
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Mango Lassi</h3>
+              <p>A creamy, cooling blend of thick yoghurt, ripe mango, a pinch of cardamom, and rose water. The perfect curry companion.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$4.99</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              🌹
+              <div class="menu-item-tags">
+                <span class="tag-new">New</span>
+                <span class="tag-veg">Veg</span>
+              </div>
+            </div>
+            <div class="menu-item-body">
+              <h3>Rose Sharbat</h3>
+              <p>A chilled artisan drink made from fresh rose petals, basil seeds, lemon, and a touch of honey. Floral, sweet, and refreshing.</p>
+              <div class="menu-item-footer">
+                <span class="menu-price">$4.49</span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===== CTA BANNER ===== -->
+  <div class="cta-banner">
+    <div class="container reveal">
+      <h2>Ready to Order? Come Visit <em>Us!</em></h2>
+      <p>Dine in, take away, or book for a private event — we're ready to make your experience unforgettable.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="contact.html" class="btn btn-primary"><span>📞</span> Reserve a Table</a>
+        <a href="index.html"   class="btn btn-outline"><span>🏠</span> Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-text">🌶️ Spicy <span>Kitchen</span></div>
+          <p>Love the Food. Live the Experience. Spicy Kitchen has been serving bold, authentic Indian flavors since 2002.</p>
+          <div class="social-links">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="Twitter">🐦</a>
+            <a href="#" title="YouTube">▶️</a>
+          </div>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">→ Home</a></li>
+            <li><a href="menu.html">→ Our Menu</a></li>
+            <li><a href="contact.html">→ Contact Us</a></li>
+            <li><a href="contact.html">→ Reserve a Table</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Our Menu</h4>
+          <ul class="footer-links">
+            <li><a href="#starters">→ Starters</a></li>
+            <li><a href="#mains">→ Main Course</a></li>
+            <li><a href="#breads">→ Breads &amp; Rice</a></li>
+            <li><a href="#desserts">→ Desserts</a></li>
+            <li><a href="#drinks">→ Drinks</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact Info</h4>
+          <ul class="footer-contact">
+            <li><span>📍</span> 123 Flavor Street, Food Town, NY 10001</li>
+            <li><span>📞</span><a href="tel:+12125550123">+1 (212) 555-0123</a></li>
+            <li><span>✉️</span><a href="mailto:hello@spicykitchen.com">hello@spicykitchen.com</a></li>
+            <li><span>🕐</span> Mon–Sun: 11:00 AM – 11:00 PM</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 <span>Spicy Kitchen</span>. All rights reserved.</p>
+        <p>Made with ❤️ &amp; 🌶️ for food lovers everywhere</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
