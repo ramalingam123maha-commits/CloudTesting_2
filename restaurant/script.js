@@ -1,349 +1,345 @@
-/* =================================================================
-   SPICY KITCHEN — script.js
-   Handles: Navbar, Hamburger, Particles, Scroll Reveal,
-            Counters, Menu Filter, Cart Toast, Contact Form
-   ================================================================= */
+/* ============================================================
+   Spicy Kitchen — script.js
+   ============================================================ */
 
-// ── Utility ──────────────────────────────────────────────────────
-const qs  = (sel, ctx = document) => ctx.querySelector(sel);
-const qsa = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+'use strict';
 
-/* =================================================================
-   NAVBAR — scroll behaviour + hamburger
-   ================================================================= */
+/* ── Utilities ─────────────────────────────────────────────── */
+const $ = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+/* ============================================================
+   1. NAVBAR — scroll-to-solid + hamburger
+   ============================================================ */
 (function initNavbar() {
-  const navbar    = qs('#navbar');
-  const hamburger = qs('#hamburger');
-  const navLinks  = qs('#navLinks');
+  const navbar    = $('#navbar');
+  const hamburger = $('#hamburger');
+  const navLinks  = $('#navLinks');
+
   if (!navbar) return;
 
-  // Scroll → add .scrolled class
-  const onScroll = () => {
+  // Sticky style on scroll
+  window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 40);
-    qs('#scrollTop')?.classList.toggle('visible', window.scrollY > 400);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  }, { passive: true });
 
-  // Hamburger toggle
+  // Mobile toggle
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('open');
-      navLinks.classList.toggle('open');
+      const open = navLinks.classList.toggle('open');
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
     });
 
-    // Close when a link is tapped (mobile)
+    // Close when a link is clicked
     navLinks.addEventListener('click', e => {
       if (e.target.tagName === 'A') {
-        hamburger.classList.remove('open');
         navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
       }
     });
 
     // Close on outside click
     document.addEventListener('click', e => {
       if (!navbar.contains(e.target)) {
-        hamburger.classList.remove('open');
         navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
       }
     });
   }
 
-  // Scroll-to-top button
-  qs('#scrollTop')?.addEventListener('click', () =>
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  );
+  // Highlight active nav link based on current page
+  const currentFile = location.pathname.split('/').pop() || 'index.html';
+  $$('.nav-links a').forEach(a => {
+    const href = a.getAttribute('href');
+    if (href === currentFile || (currentFile === '' && href === 'index.html')) {
+      a.classList.add('active');
+    } else {
+      a.classList.remove('active');
+    }
+  });
 })();
 
-/* =================================================================
-   FLOATING PARTICLES (hero only)
-   ================================================================= */
+/* ============================================================
+   2. SCROLL-TO-TOP BUTTON
+   ============================================================ */
+(function initScrollTop() {
+  const btn = $('#scrollTop');
+  if (!btn) return;
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+})();
+
+/* ============================================================
+   3. SCROLL REVEAL — IntersectionObserver
+   ============================================================ */
+(function initReveal() {
+  const items = $$('.reveal');
+  if (!items.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  items.forEach(el => observer.observe(el));
+})();
+
+/* ============================================================
+   4. ANIMATED COUNTERS (hero stats)
+   ============================================================ */
+(function initCounters() {
+  const counters = $$('[data-count]');
+  if (!counters.length) return;
+
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const DURATION = 2000;
+
+  const animateCounter = el => {
+    const target = parseInt(el.dataset.count, 10);
+    const start  = performance.now();
+
+    const tick = now => {
+      const t = Math.min((now - start) / DURATION, 1);
+      const val = Math.round(easeOut(t) * target);
+      el.textContent = val >= 1000 ? val.toLocaleString() : val;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = target >= 1000 ? target.toLocaleString() : target;
+    };
+
+    requestAnimationFrame(tick);
+  };
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  counters.forEach(el => observer.observe(el));
+})();
+
+/* ============================================================
+   5. HERO FLOATING PARTICLES
+   ============================================================ */
 (function initParticles() {
-  const container = qs('#heroParticles');
+  const container = $('#heroParticles');
   if (!container) return;
 
-  const emojis = ['🌶️', '🧄', '🌿', '🍅', '⭐', '✨', '🔥', '🫙'];
-  const COUNT  = 14;
+  const emojis = ['🌶️','🍅','🧄','🌿','🫚','🧅','🍋','🥬','🌰','🫛'];
+  const TOTAL   = 18;
 
-  for (let i = 0; i < COUNT; i++) {
-    const el = document.createElement('span');
-    el.classList.add('particle');
-    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+  for (let i = 0; i < TOTAL; i++) {
+    const p   = document.createElement('span');
+    p.classList.add('particle');
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
 
-    const size     = Math.random() * 18 + 12;  // 12–30 px
-    const left     = Math.random() * 100;       // 0–100 %
-    const duration = Math.random() * 18 + 12;  // 12–30 s
-    const delay    = Math.random() * 12;        // 0–12 s
+    const size     = 14 + Math.random() * 18;
+    const left     = Math.random() * 100;
+    const delay    = Math.random() * 12;
+    const duration = 10 + Math.random() * 14;
 
-    el.style.cssText = `
-      font-size: ${size}px;
+    p.style.cssText = `
       left: ${left}%;
+      font-size: ${size}px;
       animation-duration: ${duration}s;
-      animation-delay: -${delay}s;
-      opacity: .55;
+      animation-delay: ${delay}s;
     `;
-    container.appendChild(el);
+
+    container.appendChild(p);
   }
 })();
 
-/* =================================================================
-   SCROLL REVEAL — IntersectionObserver
-   ================================================================= */
-(function initReveal() {
-  const targets = qsa('.reveal');
-  if (!targets.length) return;
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-  );
-
-  targets.forEach(el => io.observe(el));
-})();
-
-/* =================================================================
-   NUMBER COUNTERS (Home hero stats)
-   ================================================================= */
-(function initCounters() {
-  const counters = qsa('[data-count]');
-  if (!counters.length) return;
-
-  const formatNum = n => {
-    if (n >= 1000) return (n / 1000).toFixed(0) + ',000+';
-    return n + '+';
-  };
-
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el    = entry.target;
-      const end   = parseInt(el.dataset.count, 10);
-      const dur   = 1600;
-      const step  = 16;
-      const steps = dur / step;
-      let   cur   = 0;
-
-      const tick = () => {
-        cur = Math.min(cur + end / steps, end);
-        el.textContent = formatNum(Math.round(cur));
-        if (cur < end) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-      io.unobserve(el);
-    });
-  }, { threshold: 0.5 });
-
-  counters.forEach(c => io.observe(c));
-})();
-
-/* =================================================================
-   MENU PAGE — filter tabs
-   ================================================================= */
+/* ============================================================
+   6. MENU PAGE — category filter
+   ============================================================ */
 (function initMenuFilter() {
-  const filterBtns = qsa('.filter-btn');
-  if (!filterBtns.length) return;
-
-  const sections = qsa('.menu-section[data-category]');
+  const filterBtns = $$('.filter-btn');
+  const sections   = $$('.menu-section[data-category]');
+  if (!filterBtns.length || !sections.length) return;
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Update active button
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
       const filter = btn.dataset.filter;
 
       sections.forEach(sec => {
-        if (filter === 'all' || sec.dataset.category === filter) {
-          sec.style.display = '';
-          // Re-trigger reveal on items that just became visible
-          qsa('.reveal', sec).forEach(el => {
-            el.classList.remove('visible');
-            requestAnimationFrame(() => el.classList.add('visible'));
-          });
-        } else {
-          sec.style.display = 'none';
+        const show = filter === 'all' || sec.dataset.category === filter;
+        sec.style.display = show ? '' : 'none';
+
+        // Smooth scroll to the first visible section on mobile
+        if (show && filter !== 'all') {
+          setTimeout(() => {
+            const offset = 120;
+            const top    = sec.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }, 50);
         }
       });
-
-      // Smooth scroll to first visible section
-      const firstVisible = sections.find(s => s.style.display !== 'none');
-      if (firstVisible) {
-        const offset = 120;
-        const y = firstVisible.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
     });
   });
 })();
 
-/* =================================================================
-   CART / ADD BUTTON TOASTS
-   ================================================================= */
+/* ============================================================
+   7. ADD TO ORDER — toast notification
+   ============================================================ */
 (function initAddButtons() {
-  let toastTimeout;
+  const addBtns = $$('.add-btn');
+  if (!addBtns.length) return;
 
-  function createToast(itemName) {
-    // Remove existing toast
-    qs('#cartToast')?.remove();
-    clearTimeout(toastTimeout);
+  // Create toast element
+  const toast = document.createElement('div');
+  toast.id = 'toast';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  Object.assign(toast.style, {
+    position:     'fixed',
+    bottom:       '80px',
+    left:         '50%',
+    transform:    'translateX(-50%) translateY(20px)',
+    background:   'linear-gradient(135deg, #e63939, #ff7f2a)',
+    color:        '#fff',
+    padding:      '12px 24px',
+    borderRadius: '50px',
+    fontWeight:   '700',
+    fontSize:     '.88rem',
+    boxShadow:    '0 8px 28px rgba(230,57,57,.45)',
+    zIndex:       '9999',
+    opacity:      '0',
+    transition:   'opacity .3s, transform .3s',
+    pointerEvents:'none',
+    whiteSpace:   'nowrap',
+  });
+  document.body.appendChild(toast);
 
-    const toast = document.createElement('div');
-    toast.id = 'cartToast';
-    Object.assign(toast.style, {
-      position:      'fixed',
-      bottom:        '28px',
-      left:          '50%',
-      transform:     'translateX(-50%) translateY(60px)',
-      background:    'linear-gradient(135deg, #e63939, #ff7f2a)',
-      color:         '#fff',
-      padding:       '14px 28px',
-      borderRadius:  '50px',
-      fontWeight:    '600',
-      fontSize:      '.9rem',
-      boxShadow:     '0 8px 28px rgba(230,57,57,.45)',
-      zIndex:        '9999',
-      whiteSpace:    'nowrap',
-      transition:    'transform .3s ease, opacity .3s ease',
-      opacity:       '0',
-    });
-    toast.textContent = `🛒 "${itemName}" added to your order!`;
-    document.body.appendChild(toast);
+  let hideTimeout;
 
-    requestAnimationFrame(() => {
-      toast.style.transform  = 'translateX(-50%) translateY(0)';
-      toast.style.opacity    = '1';
-    });
-
-    toastTimeout = setTimeout(() => {
-      toast.style.transform = 'translateX(-50%) translateY(60px)';
+  const showToast = msg => {
+    clearTimeout(hideTimeout);
+    toast.textContent = msg;
+    toast.style.opacity   = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    hideTimeout = setTimeout(() => {
       toast.style.opacity   = '0';
-      setTimeout(() => toast.remove(), 350);
-    }, 2800);
-  }
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2400);
+  };
 
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.add-btn');
-    if (!btn) return;
+  addBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.dish-card, .menu-item');
+      const name = card ? (card.querySelector('h3')?.textContent || 'Item') : 'Item';
+      const price = card ? (card.querySelector('.dish-price, .menu-price')?.textContent || '') : '';
+      showToast(`🛒 Added: ${name} ${price}`);
 
-    // Animate the button
-    btn.style.transform = 'scale(1.35)';
-    setTimeout(() => (btn.style.transform = ''), 200);
-
-    // Get dish name
-    const card  = btn.closest('.menu-item, .dish-card');
-    const title = card?.querySelector('h3')?.textContent?.trim() || 'Item';
-    createToast(title);
+      // Brief scale animation on the button
+      btn.style.transform = 'scale(1.35)';
+      setTimeout(() => { btn.style.transform = ''; }, 220);
+    });
   });
 })();
 
-/* =================================================================
-   CONTACT FORM — validation + success state
-   ================================================================= */
+/* ============================================================
+   8. CONTACT FORM — validation + success state
+   ============================================================ */
 (function initContactForm() {
-  const form    = qs('#contactForm');
-  const success = qs('#formSuccess');
-  const reset   = qs('#resetForm');
+  const form        = $('#contactForm');
+  const successDiv  = $('#formSuccess');
+  const resetBtn    = $('#resetForm');
   if (!form) return;
 
-  function showError(input, msg) {
-    clearError(input);
-    input.style.borderColor = '#e63939';
-    input.style.boxShadow   = '0 0 0 3px rgba(230,57,57,.12)';
-    const span = document.createElement('span');
-    span.className = 'field-error';
-    Object.assign(span.style, {
-      color:     '#e63939',
-      fontSize:  '.78rem',
-      marginTop: '4px',
-      display:   'block',
-    });
-    span.textContent = msg;
-    input.parentNode.appendChild(span);
-  }
+  // Helper: show / clear error
+  const setError = (field, msg) => {
+    let errEl = field.parentElement.querySelector('.field-error');
+    if (!errEl) {
+      errEl = document.createElement('span');
+      errEl.className = 'field-error';
+      Object.assign(errEl.style, { color: '#ff7070', fontSize: '.78rem', marginTop: '4px', display: 'block' });
+      field.parentElement.appendChild(errEl);
+    }
+    if (msg) {
+      errEl.textContent = msg;
+      field.style.borderColor = '#e63939';
+    } else {
+      errEl.textContent = '';
+      field.style.borderColor = '';
+    }
+  };
 
-  function clearError(input) {
-    input.style.borderColor = '';
-    input.style.boxShadow   = '';
-    input.parentNode.querySelector('.field-error')?.remove();
-  }
+  const isEmpty = v => !v.trim();
+  const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
-  function validateEmail(val) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-  }
+  // Live validation on blur
+  $$('[data-required], #firstName, #lastName, #email, #subject, #message', form).forEach(el => {
+    el.addEventListener('blur', () => validateField(el));
+  });
+
+  const validateField = field => {
+    const { id, value } = field;
+    if (['firstName','lastName','message'].includes(id) && isEmpty(value)) {
+      setError(field, 'This field is required.'); return false;
+    }
+    if (id === 'email') {
+      if (isEmpty(value)) { setError(field, 'Email is required.'); return false; }
+      if (!isEmail(value)) { setError(field, 'Please enter a valid email address.'); return false; }
+    }
+    if (id === 'subject' && !value) {
+      setError(field, 'Please select a topic.'); return false;
+    }
+    setError(field, '');
+    return true;
+  };
+
+  const validateAll = () => {
+    const fields = [
+      $('#firstName', form), $('#lastName', form),
+      $('#email', form),     $('#subject', form),
+      $('#message', form),
+    ];
+    return fields.every(f => f && validateField(f));
+  };
 
   form.addEventListener('submit', e => {
     e.preventDefault();
-    let valid = true;
+    if (!validateAll()) return;
 
-    const fields = [
-      { id: 'firstName', msg: 'Please enter your first name.'  },
-      { id: 'lastName',  msg: 'Please enter your last name.'   },
-      { id: 'email',     msg: null },
-      { id: 'subject',   msg: 'Please select a subject.'       },
-      { id: 'message',   msg: 'Please enter your message.'     },
-    ];
-
-    fields.forEach(({ id, msg }) => {
-      const el = qs(`#${id}`, form);
-      if (!el) return;
-      clearError(el);
-      const val = el.value.trim();
-
-      if (!val) {
-        showError(el, msg || `This field is required.`);
-        valid = false;
-        return;
-      }
-      if (id === 'email' && !validateEmail(val)) {
-        showError(el, 'Please enter a valid email address.');
-        valid = false;
-      }
-    });
-
-    if (!valid) {
-      // Scroll to first error
-      const firstErr = form.querySelector('.field-error');
-      if (firstErr) {
-        firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-      return;
-    }
-
-    // Simulate successful send (replace with real fetch/XHR call if needed)
-    const submitBtn = form.querySelector('[type="submit"]');
-    submitBtn.textContent = '⏳ Sending…';
-    submitBtn.disabled    = true;
+    // Simulate async submission
+    const btn = form.querySelector('[type="submit"]');
+    const origText = btn.innerHTML;
+    btn.disabled  = true;
+    btn.innerHTML = '⏳ Sending…';
 
     setTimeout(() => {
+      btn.disabled  = false;
+      btn.innerHTML = origText;
       form.style.display    = 'none';
-      success.style.display = 'block';
-      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      successDiv.style.display = 'block';
     }, 1200);
   });
 
-  // Clear errors on input
-  form.addEventListener('input', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-      clearError(e.target);
-    }
-  });
-
-  // Reset form button in success state
-  reset?.addEventListener('click', () => {
-    form.reset();
-    const submitBtn = form.querySelector('[type="submit"]');
-    submitBtn.textContent = '📨 Send Message';
-    submitBtn.disabled    = false;
-    success.style.display = 'none';
-    form.style.display    = '';
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  // Reset form
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      form.reset();
+      $$('.field-error', form).forEach(el => { el.textContent = ''; });
+      $$('input, select, textarea', form).forEach(el => { el.style.borderColor = ''; });
+      form.style.display       = '';
+      successDiv.style.display = 'none';
+    });
+  }
 })();
