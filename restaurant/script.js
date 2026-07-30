@@ -3,8 +3,6 @@
    Shared JavaScript for all 3 pages
    ================================================ */
 
-'use strict';
-
 /* ── 1. NAVBAR ── */
 (function () {
   const navbar    = document.getElementById('navbar');
@@ -13,26 +11,25 @@
 
   if (!navbar) return;
 
-  // Scroll → add/remove .scrolled (unless the page pre-sets it)
-  const isSubPage = navbar.classList.contains('scrolled');
-
-  window.addEventListener('scroll', function () {
-    if (!isSubPage) {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
-    }
-  }, { passive: true });
+  // Scroll: add/remove .scrolled class (skip pages that already have it)
+  const alwaysScrolled = navbar.classList.contains('scrolled');
+  if (!alwaysScrolled) {
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+  }
 
   // Hamburger toggle
   if (hamburger && navLinks) {
-    hamburger.addEventListener('click', function () {
-      const isOpen = navLinks.classList.toggle('open');
-      hamburger.classList.toggle('open', isOpen);
-      hamburger.setAttribute('aria-expanded', String(isOpen));
+    hamburger.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
     });
 
     // Auto-close on link click
-    navLinks.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
         navLinks.classList.remove('open');
         hamburger.classList.remove('open');
         hamburger.setAttribute('aria-expanded', 'false');
@@ -40,292 +37,271 @@
     });
 
     // Close on outside click
-    document.addEventListener('click', function (e) {
-      if (!navbar.contains(e.target) && navLinks.classList.contains('open')) {
+    document.addEventListener('click', e => {
+      if (!navbar.contains(e.target)) {
         navLinks.classList.remove('open');
         hamburger.classList.remove('open');
         hamburger.setAttribute('aria-expanded', 'false');
       }
     });
   }
-}());
+})();
 
 /* ── 2. SCROLL-TO-TOP ── */
 (function () {
   const btn = document.getElementById('scrollTop');
   if (!btn) return;
 
-  window.addEventListener('scroll', function () {
+  window.addEventListener('scroll', () => {
     btn.classList.toggle('visible', window.scrollY > 400);
   }, { passive: true });
 
-  btn.addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-}());
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+})();
 
-/* ── 3. SCROLL-REVEAL ── */
+/* ── 3. SCROLL REVEAL ── */
 (function () {
   const elements = document.querySelectorAll('.reveal');
-  if (!elements.length) return;
+  if (!elements.length || !window.IntersectionObserver) return;
 
-  const observer = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12 }
-  );
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
 
-  elements.forEach(function (el) { observer.observe(el); });
-}());
+  elements.forEach(el => observer.observe(el));
+})();
 
 /* ── 4. ANIMATED STAT COUNTERS ── */
 (function () {
   const counters = document.querySelectorAll('.stat-number[data-count]');
-  if (!counters.length) return;
+  if (!counters.length || !window.IntersectionObserver) return;
 
-  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
 
   function animateCounter(el) {
     const target   = parseInt(el.dataset.count, 10);
     const duration = 1600;
     const start    = performance.now();
 
-    function step(now) {
-      const elapsed  = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const value    = Math.round(easeOutCubic(progress) * target);
-      el.textContent = value.toLocaleString();
-      if (progress < 1) requestAnimationFrame(step);
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      el.textContent = Math.floor(easeOut(progress) * target).toLocaleString();
+      if (progress < 1) requestAnimationFrame(tick);
+      else el.textContent = target.toLocaleString();
     }
-
-    requestAnimationFrame(step);
+    requestAnimationFrame(tick);
   }
 
-  const observer = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animateCounter(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.5 }
-  );
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
 
-  counters.forEach(function (counter) { observer.observe(counter); });
-}());
+  counters.forEach(c => observer.observe(c));
+})();
 
 /* ── 5. HERO PARTICLES ── */
 (function () {
   const container = document.getElementById('heroParticles');
   if (!container) return;
 
-  const emojis = ['🌶️', '🧄', '🌿', '🫙', '🍛', '🍲', '🥘', '🔥', '⭐', '🫚', '🌰', '🧅', '🍃', '✨', '🍴', '🫕', '🥗', '🍮'];
-  const count   = 18;
+  const emojis = ['🌶️','🧄','🌿','🍛','🥘','🍗','🫙','🧅','🌾','🔥','✨','🍚','🥗','🍖','🫓','🧀','🍮','🥭'];
+  const count  = 18;
 
   for (let i = 0; i < count; i++) {
-    const p = document.createElement('span');
-    p.className   = 'particle';
-    p.textContent = emojis[i % emojis.length];
-
-    const size = 14 + Math.random() * 18;
-    p.style.cssText = [
-      'font-size:'    + size.toFixed(1) + 'px',
-      'left:'         + (Math.random() * 100).toFixed(1) + '%',
-      'animation-duration:'  + (10 + Math.random() * 14).toFixed(1) + 's',
-      'animation-delay:'     + (-(Math.random() * 10)).toFixed(1) + 's'
+    const span = document.createElement('span');
+    span.classList.add('particle');
+    span.textContent = emojis[i % emojis.length];
+    span.style.cssText = [
+      `font-size: ${14 + Math.random() * 18}px`,
+      `left: ${Math.random() * 100}%`,
+      `animation-duration: ${10 + Math.random() * 14}s`,
+      `animation-delay: ${-(Math.random() * 12)}s`,
     ].join(';');
-
-    container.appendChild(p);
+    container.appendChild(span);
   }
-}());
+})();
 
-/* ── 6. MENU CATEGORY FILTER ── */
+/* ── 6. MENU FILTER + SCROLL-SPY ── */
 (function () {
   const filterBtns = document.querySelectorAll('.filter-btn');
   const sections   = document.querySelectorAll('.menu-section[data-category]');
-  if (!filterBtns.length || !sections.length) return;
+  if (!filterBtns.length) return;
 
-  // Click → scroll to section
-  filterBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      filterBtns.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-
+  // Click: scroll to section
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
 
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
       if (filter === 'all') {
-        window.scrollTo({ top: sections[0].getBoundingClientRect().top + window.scrollY - 140, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
       const target = document.getElementById(filter);
       if (target) {
-        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 140, behavior: 'smooth' });
+        const offset = 140;
+        const top    = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
       }
     });
   });
 
-  // Scroll-spy → highlight active filter
-  window.addEventListener('scroll', function () {
+  // Scroll-spy: highlight active filter button
+  if (!sections.length) return;
+  window.addEventListener('scroll', () => {
+    const viewportMid = window.scrollY + window.innerHeight * 0.25;
     let current = 'all';
-    sections.forEach(function (section) {
-      const rect = section.getBoundingClientRect();
-      if (rect.top <= window.innerHeight * 0.25) {
-        current = section.dataset.category;
-      }
+
+    sections.forEach(sec => {
+      if (sec.offsetTop <= viewportMid) current = sec.dataset.category;
     });
-    filterBtns.forEach(function (btn) {
-      btn.classList.toggle('active', btn.dataset.filter === current || (current === 'all' && btn.dataset.filter === 'all'));
+
+    filterBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filter === current);
     });
   }, { passive: true });
-}());
+})();
 
-/* ── 7. CART TOAST NOTIFICATION ── */
+/* ── 7. CART TOAST ── */
 (function () {
-  const toast = (function buildToast() {
-    const el = document.createElement('div');
-    el.id = 'cartToast';
-    el.style.cssText = [
-      'position:fixed',
-      'bottom:88px',
-      'right:28px',
-      'background:linear-gradient(135deg,#e63939,#ff7f2a)',
-      'color:#fff',
-      'padding:12px 20px',
-      'border-radius:50px',
-      'font-size:.88rem',
-      'font-weight:700',
-      'box-shadow:0 6px 24px rgba(230,57,57,.55)',
-      'z-index:2000',
-      'opacity:0',
-      'transform:translateY(14px)',
-      'transition:opacity .3s ease,transform .3s ease',
-      'pointer-events:none',
-      'white-space:nowrap'
-    ].join(';');
-    document.body.appendChild(el);
-    return el;
-  }());
+  // Create toast element once
+  const toast = document.createElement('div');
+  toast.id = 'cartToast';
+  Object.assign(toast.style, {
+    position:       'fixed',
+    bottom:         '28px',
+    left:           '50%',
+    transform:      'translateX(-50%) translateY(80px)',
+    background:     'linear-gradient(135deg,#e63939,#ff7f2a)',
+    color:          '#fff',
+    padding:        '13px 28px',
+    borderRadius:   '50px',
+    fontWeight:     '700',
+    fontSize:       '.9rem',
+    boxShadow:      '0 6px 24px rgba(230,57,57,.5)',
+    zIndex:         '9999',
+    opacity:        '0',
+    transition:     'opacity .3s, transform .3s',
+    pointerEvents:  'none',
+    whiteSpace:     'nowrap',
+  });
+  document.body.appendChild(toast);
 
   let hideTimer = null;
 
   function showToast(name) {
-    toast.textContent = '🛒 "' + name + '" added to your order!';
+    toast.textContent = `🛒 "${name}" added to your order!`;
     toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
-
+    toast.style.transform = 'translateX(-50%) translateY(0)';
     clearTimeout(hideTimer);
-    hideTimer = setTimeout(function () {
+    hideTimer = setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(14px)';
+      toast.style.transform = 'translateX(-50%) translateY(80px)';
     }, 2400);
   }
 
-  // Event delegation on the whole page
-  document.addEventListener('click', function (e) {
+  // Event delegation on document
+  document.addEventListener('click', e => {
     const btn = e.target.closest('.add-btn');
     if (!btn) return;
 
-    const card   = btn.closest('.dish-card, .menu-item');
-    const nameEl = card && card.querySelector('h3');
-    const name   = nameEl ? nameEl.textContent.trim() : 'Item';
+    const card = btn.closest('.dish-card, .menu-item');
+    const name = card ? (card.querySelector('h3') || {}).textContent || 'Item' : 'Item';
 
-    // Visual feedback on button
+    // Button feedback
+    const original = btn.textContent;
     btn.textContent = '✓';
     btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
-    setTimeout(function () {
-      btn.textContent = '+';
+    setTimeout(() => {
+      btn.textContent = original;
       btn.style.background = '';
     }, 900);
 
     showToast(name);
   });
-}());
+})();
 
-/* ── 8. CONTACT FORM VALIDATION ── */
+/* ── 8. CONTACT FORM ── */
 (function () {
-  const form      = document.getElementById('contactForm');
-  const success   = document.getElementById('formSuccess');
-  const resetBtn  = document.getElementById('resetBtn') || document.getElementById('resetForm');
-  const submitBtn = document.getElementById('submitBtn');
-
+  const form    = document.getElementById('contactForm');
+  const success = document.getElementById('formSuccess');
+  const resetBtn = document.getElementById('resetBtn');
   if (!form) return;
 
-  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  function getErrorEl(field) {
-    let err = field.parentElement.querySelector('.field-error');
-    if (!err) {
-      err = document.createElement('span');
-      err.className = 'field-error';
-      err.style.cssText = 'color:#e63939;font-size:.76rem;margin-top:4px;display:block;';
-      field.parentElement.appendChild(err);
-    }
-    return err;
+  function getError(field) {
+    const v = field.value.trim();
+    if (field.required && !v) return 'This field is required.';
+    if (field.type === 'email' && v && !EMAIL_RE.test(v)) return 'Please enter a valid email address.';
+    return '';
   }
 
-  function validateField(field) {
-    const err = getErrorEl(field);
-    const val = field.value.trim();
-    let msg = '';
-
-    if (field.required && !val) {
-      msg = 'This field is required.';
-    } else if (field.type === 'email' && val && !EMAIL_RE.test(val)) {
-      msg = 'Please enter a valid email address.';
+  function showError(field, msg) {
+    let span = field.parentElement.querySelector('.field-error');
+    if (!span) {
+      span = document.createElement('span');
+      span.className = 'field-error';
+      Object.assign(span.style, { color: '#ef4444', fontSize: '.78rem', marginTop: '4px', display: 'block' });
+      field.parentElement.appendChild(span);
     }
-
-    err.textContent = msg;
-    field.style.borderColor = msg ? '#e63939' : '';
-    return !msg;
+    span.textContent = msg;
+    field.style.borderColor = msg ? '#ef4444' : '';
   }
 
-  // Blur-time validation
-  form.querySelectorAll('input, select, textarea').forEach(function (field) {
-    field.addEventListener('blur',  function () { validateField(field); });
-    field.addEventListener('input', function () { if (field.style.borderColor) validateField(field); });
+  // Blur validation
+  form.querySelectorAll('input,select,textarea').forEach(field => {
+    field.addEventListener('blur', () => showError(field, getError(field)));
+    field.addEventListener('input', () => { if (getError(field) === '') showError(field, ''); });
   });
 
   // Submit
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
-
     let valid = true;
-    form.querySelectorAll('input[required], select[required], textarea[required]').forEach(function (field) {
-      if (!validateField(field)) valid = false;
+
+    form.querySelectorAll('input,select,textarea').forEach(field => {
+      const err = getError(field);
+      showError(field, err);
+      if (err) valid = false;
     });
 
     if (!valid) return;
 
-    // Simulate async submit
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = '⏳ Sending…';
-    }
+    const btn = form.querySelector('#submitBtn');
+    btn.textContent = '⏳ Sending…';
+    btn.disabled = true;
 
-    setTimeout(function () {
-      form.style.display    = 'none';
-      if (success) success.style.display = 'block';
-    }, 1200);
+    // Simulate async submit
+    await new Promise(r => setTimeout(r, 1200));
+
+    form.style.display = 'none';
+    if (success) success.style.display = 'block';
   });
 
   // Reset
   if (resetBtn) {
-    resetBtn.addEventListener('click', function () {
+    resetBtn.addEventListener('click', () => {
       form.reset();
-      form.querySelectorAll('.field-error').forEach(function (el) { el.textContent = ''; });
-      form.querySelectorAll('input, select, textarea').forEach(function (f) { f.style.borderColor = ''; });
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<span>✉️</span> Send Message'; }
-      form.style.display    = '';
-      if (success) success.style.display = 'none';
+      form.querySelectorAll('.field-error').forEach(s => s.remove());
+      form.querySelectorAll('input,select,textarea').forEach(f => f.style.borderColor = '');
+      const btn = form.querySelector('#submitBtn');
+      if (btn) { btn.textContent = '✉️ Send Message'; btn.disabled = false; }
+      success.style.display = 'none';
+      form.style.display = 'block';
     });
   }
-}());
+})();
