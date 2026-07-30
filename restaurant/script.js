@@ -1,53 +1,60 @@
 /* =============================================
    Spicy Kitchen — script.js
+   All interactive behaviours across 3 pages
    ============================================= */
 
-/* ── 1. NAVBAR ── */
+/* ── 1. NAVBAR — scroll sticky + hamburger ── */
 (function () {
-  const navbar    = document.getElementById('navbar');
-  const hamburger = document.getElementById('hamburger');
-  const navLinks  = document.getElementById('navLinks');
+  const navbar     = document.getElementById('navbar');
+  const hamburger  = document.getElementById('hamburger');
+  const navLinks   = document.getElementById('navLinks');
 
   if (!navbar) return;
 
-  /* Scroll → sticky dark-glass */
-  window.addEventListener('scroll', () => {
+  // Scroll: add/remove .scrolled class
+  function onScroll() {
     if (window.scrollY > 60) {
       navbar.classList.add('scrolled');
     } else {
-      navbar.classList.remove('scrolled');
+      // Keep scrolled on sub-pages that start with it
+      if (!navbar.classList.contains('scrolled') || window.scrollY === 0) {
+        if (!document.querySelector('.navbar.scrolled[id]')) {
+          navbar.classList.remove('scrolled');
+        }
+      }
     }
-  }, { passive: true });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* Hamburger open / close */
+  // Hamburger toggle
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
-      const open = navLinks.classList.toggle('open');
-      hamburger.classList.toggle('open', open);
-      hamburger.setAttribute('aria-expanded', String(open));
+      const open = hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
     });
 
-    /* Close menu when a link is clicked */
+    // Auto-close on link click
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
         hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
         hamburger.setAttribute('aria-expanded', 'false');
       });
     });
 
-    /* Close when clicking outside */
+    // Close on outside click
     document.addEventListener('click', (e) => {
       if (!navbar.contains(e.target)) {
-        navLinks.classList.remove('open');
         hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
         hamburger.setAttribute('aria-expanded', 'false');
       }
     });
   }
 })();
 
-/* ── 2. SCROLL-TO-TOP ── */
+/* ── 2. SCROLL-TO-TOP BUTTON ── */
 (function () {
   const btn = document.getElementById('scrollTop');
   if (!btn) return;
@@ -61,19 +68,22 @@
   });
 })();
 
-/* ── 3. SCROLL-REVEAL ── */
+/* ── 3. SCROLL-REVEAL via IntersectionObserver ── */
 (function () {
   const els = document.querySelectorAll('.reveal');
   if (!els.length) return;
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
 
   els.forEach(el => io.observe(el));
 })();
@@ -92,23 +102,28 @@
     const duration = 1600;
     const start    = performance.now();
 
-    function step(now) {
+    function tick(now) {
       const elapsed  = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      el.textContent = Math.floor(easeOutCubic(progress) * target).toLocaleString();
-      if (progress < 1) requestAnimationFrame(step);
+      const value    = Math.round(easeOutCubic(progress) * target);
+      el.textContent = value.toLocaleString();
+      if (progress < 1) requestAnimationFrame(tick);
+      else el.textContent = target.toLocaleString();
     }
-    requestAnimationFrame(step);
+    requestAnimationFrame(tick);
   }
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCounter(entry.target);
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
 
   counters.forEach(el => io.observe(el));
 })();
@@ -118,42 +133,41 @@
   const container = document.getElementById('heroParticles');
   if (!container) return;
 
-  const emojis  = ['🌶️','🍛','🧄','🌿','🍋','🍚','🥩','🫓','🧅','🥘','🌾','🥗','🍢','🫕','🍮','🍵','🌰','🍃'];
-  const count   = 18;
+  const emojis = ['🌶️', '🧄', '🌿', '🍋', '🫙', '🌰', '🍃', '🌾', '🧅', '🫚',
+                  '✨', '🔥', '🍽️', '🥄', '🫕', '🍛', '🌱', '🌺'];
 
-  for (let i = 0; i < count; i++) {
-    const el = document.createElement('span');
-    el.className   = 'particle';
-    el.textContent = emojis[i % emojis.length];
+  for (let i = 0; i < 18; i++) {
+    const span = document.createElement('span');
+    span.className = 'particle';
+    span.textContent = emojis[i % emojis.length];
 
-    const size   = Math.random() * 18 + 14;   // 14–32 px
-    const left   = Math.random() * 100;        // 0–100 %
-    const dur    = Math.random() * 14 + 10;    // 10–24 s
-    const delay  = Math.random() * -20;        // stagger starts
+    const size     = 14 + Math.random() * 18;          // 14–32px
+    const left     = Math.random() * 100;               // 0–100%
+    const duration = 10 + Math.random() * 14;           // 10–24s
+    const delay    = -(Math.random() * duration);       // stagger
 
-    el.style.cssText = `
+    span.style.cssText = `
       font-size: ${size}px;
       left: ${left}%;
-      animation-duration: ${dur}s;
+      animation-duration: ${duration}s;
       animation-delay: ${delay}s;
     `;
-    container.appendChild(el);
+    container.appendChild(span);
   }
 })();
 
-/* ── 6. MENU FILTER BAR ── */
+/* ── 6. MENU FILTER (menu.html only) ── */
 (function () {
-  const btns = document.querySelectorAll('.filter-btn');
-  if (!btns.length) return;
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const sections   = document.querySelectorAll('.menu-section');
+  if (!filterBtns.length) return;
 
-  const OFFSET = 140; // px above target (navbar + filter bar height)
-
-  /* Click → scroll to section */
-  btns.forEach(btn => {
+  // Click → scroll to section
+  filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
 
-      btns.forEach(b => b.classList.remove('active'));
+      filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
       if (filter === 'all') {
@@ -162,177 +176,182 @@
       }
 
       const target = document.getElementById(filter);
-      if (!target) return;
-
-      const top = target.getBoundingClientRect().top + window.scrollY - OFFSET;
-      window.scrollTo({ top, behavior: 'smooth' });
+      if (target) {
+        const offset = 140;
+        const top    = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
     });
   });
 
-  /* Scroll-spy: highlight active filter while scrolling */
-  const sections = document.querySelectorAll('[data-category]');
-  if (!sections.length) return;
-
-  window.addEventListener('scroll', () => {
+  // Scroll-spy: highlight active filter while scrolling
+  function updateActiveFilter() {
     let current = 'all';
-    sections.forEach(sec => {
-      const rect = sec.getBoundingClientRect();
-      if (rect.top <= window.innerHeight * 0.25) {
-        current = sec.dataset.category;
+    const threshold = window.innerHeight * 0.25;
+
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top < threshold && rect.bottom > 0) {
+        current = section.dataset.category;
       }
     });
 
-    btns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.filter === current);
+    filterBtns.forEach(btn => {
+      const isActive = btn.dataset.filter === current ||
+        (current === 'all' && btn.dataset.filter === 'all');
+      btn.classList.toggle('active', isActive);
     });
-  }, { passive: true });
+  }
+
+  window.addEventListener('scroll', updateActiveFilter, { passive: true });
 })();
 
-/* ── 7. CART TOAST ── */
+/* ── 7. CART TOAST NOTIFICATION ── */
 (function () {
-  /* Create toast element once */
+  // Create toast element once
   const toast = document.createElement('div');
-  toast.id    = 'cartToast';
-  toast.style.cssText = `
-    position: fixed;
-    bottom: 80px;
-    right: 24px;
-    background: linear-gradient(135deg, #e63939, #ff7f2a);
-    color: #fff;
-    padding: 12px 22px;
-    border-radius: 50px;
-    font-size: .88rem;
-    font-weight: 700;
-    box-shadow: 0 8px 24px rgba(0,0,0,.4);
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity .3s ease, transform .3s ease;
-    pointer-events: none;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-  `;
+  toast.id = 'cartToast';
+  Object.assign(toast.style, {
+    position:     'fixed',
+    bottom:       '24px',
+    left:         '50%',
+    transform:    'translateX(-50%) translateY(80px)',
+    background:   'linear-gradient(135deg, #e63939, #ff7f2a)',
+    color:        '#fff',
+    padding:      '12px 28px',
+    borderRadius: '50px',
+    fontSize:     '.9rem',
+    fontWeight:   '700',
+    zIndex:       '9999',
+    boxShadow:    '0 8px 32px rgba(230,57,57,.5)',
+    transition:   'transform .3s ease, opacity .3s ease',
+    opacity:      '0',
+    pointerEvents:'none',
+    whiteSpace:   'nowrap',
+  });
   document.body.appendChild(toast);
 
   let hideTimer = null;
 
-  function showToast(itemName) {
+  function showToast(name) {
+    toast.textContent = `✅ "${name}" added to your order!`;
+    toast.style.transform   = 'translateX(-50%) translateY(0)';
+    toast.style.opacity     = '1';
     clearTimeout(hideTimer);
-    toast.textContent = '✓  ' + itemName + ' added to order!';
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
     hideTimer = setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(12px)';
+      toast.style.transform = 'translateX(-50%) translateY(80px)';
+      toast.style.opacity   = '0';
     }, 2400);
   }
 
+  // Delegate click on all .add-btn elements
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.add-btn');
     if (!btn) return;
 
-    const card = btn.closest('.menu-item, .dish-card');
-    const name = card ? (card.querySelector('h3') || {}).textContent || 'Item' : 'Item';
-
-    /* Brief visual feedback on button */
-    btn.textContent = '✓';
-    setTimeout(() => { btn.textContent = '+'; }, 1200);
+    const card = btn.closest('.dish-card, .menu-item');
+    const name = card ? (card.querySelector('h3')?.textContent || 'Item') : 'Item';
 
     showToast(name);
+
+    // Brief button feedback
+    btn.textContent = '✓';
+    btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+    setTimeout(() => {
+      btn.textContent = '+';
+      btn.style.background = '';
+    }, 900);
   });
 })();
 
-/* ── 8. CONTACT FORM ── */
+/* ── 8. CONTACT FORM VALIDATION ── */
 (function () {
   const form    = document.getElementById('contactForm');
   const success = document.getElementById('formSuccess');
   const reset   = document.getElementById('resetForm');
   if (!form) return;
 
-  /* ── Validation helpers ── */
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   function getError(field) {
-    return field.parentElement.querySelector('.field-error');
-  }
-
-  function showError(field, msg) {
-    let span = getError(field);
-    if (!span) {
-      span = document.createElement('span');
-      span.className = 'field-error';
-      span.style.cssText = 'display:block;font-size:.76rem;color:#e63939;margin-top:4px;';
-      field.parentElement.appendChild(span);
+    let err = field.parentElement.querySelector('.field-error');
+    if (!err) {
+      err = document.createElement('span');
+      err.className = 'field-error';
+      Object.assign(err.style, {
+        display:   'block',
+        fontSize:  '.78rem',
+        color:     '#ef4444',
+        marginTop: '4px',
+      });
+      field.parentElement.appendChild(err);
     }
-    span.textContent = msg;
-    field.style.borderColor = '#e63939';
-  }
-
-  function clearError(field) {
-    const span = getError(field);
-    if (span) span.textContent = '';
-    field.style.borderColor = '';
+    return err;
   }
 
   function validateField(field) {
-    clearError(field);
+    const err = getError(field);
     const val = field.value.trim();
 
     if (field.required && !val) {
-      showError(field, 'This field is required.');
+      err.textContent = `${field.labels?.[0]?.textContent?.replace('*','').trim() || 'This field'} is required.`;
+      field.style.borderColor = '#ef4444';
       return false;
     }
-    if (field.type === 'email' && val) {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!re.test(val)) {
-        showError(field, 'Please enter a valid email address.');
-        return false;
-      }
+    if (field.type === 'email' && val && !emailRe.test(val)) {
+      err.textContent = 'Please enter a valid email address.';
+      field.style.borderColor = '#ef4444';
+      return false;
     }
+    err.textContent = '';
+    field.style.borderColor = '#22c55e';
     return true;
   }
 
-  /* Live blur validation */
+  // Blur-time validation
   form.querySelectorAll('input, select, textarea').forEach(field => {
     field.addEventListener('blur', () => validateField(field));
     field.addEventListener('input', () => {
-      if (getError(field) && getError(field).textContent) validateField(field);
+      if (field.style.borderColor === 'rgb(239, 68, 68)') validateField(field);
     });
   });
 
-  /* Submit */
+  // Submit
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const fields  = Array.from(form.querySelectorAll('input, select, textarea'));
-    const allOk   = fields.map(f => validateField(f)).every(Boolean);
-    if (!allOk) return;
+    let valid = true;
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+      if (!validateField(field)) valid = false;
+    });
+    if (!valid) return;
 
-    /* Simulate async send */
     const submitBtn = form.querySelector('[type="submit"]');
-    submitBtn.disabled  = true;
+    submitBtn.disabled    = true;
     submitBtn.textContent = '⏳ Sending…';
 
     setTimeout(() => {
-      form.style.display = 'none';
+      form.style.display    = 'none';
       if (success) success.style.display = 'block';
     }, 1200);
   });
 
-  /* Reset back to form */
+  // Reset
   if (reset) {
     reset.addEventListener('click', () => {
       form.reset();
       form.querySelectorAll('input, select, textarea').forEach(f => {
-        clearError(f);
+        f.style.borderColor = '';
+        const err = f.parentElement.querySelector('.field-error');
+        if (err) err.textContent = '';
       });
       const submitBtn = form.querySelector('[type="submit"]');
       if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>✉️</span> Send Message';
+        submitBtn.disabled    = false;
+        submitBtn.textContent = '✉️ Send Message';
       }
-      success.style.display = 'none';
-      form.style.display    = 'block';
+      form.style.display    = '';
+      if (success) success.style.display = 'none';
     });
   }
 })();
