@@ -1,6 +1,6 @@
-/* ================================================
+/* ===============================================
    Spicy Kitchen — script.js
-   ================================================ */
+   =============================================== */
 
 /* ── 1. Navbar: scroll-sticky + hamburger ──────── */
 (function () {
@@ -8,31 +8,43 @@
   const hamburger = document.getElementById('hamburger');
   const navLinks  = document.getElementById('navLinks');
 
-  // Scroll → sticky
+  if (!navbar) return;
+
+  // Scroll: add/remove .scrolled class
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
+    if (window.scrollY > 30) {
       navbar.classList.add('scrolled');
-    } else {
+    } else if (!navbar.classList.contains('force-scrolled')) {
       navbar.classList.remove('scrolled');
     }
   }, { passive: true });
 
   // Hamburger toggle
-  hamburger && hamburger.addEventListener('click', () => {
-    const open = navLinks.classList.toggle('open');
-    hamburger.classList.toggle('open', open);
-    hamburger.setAttribute('aria-expanded', open);
-  });
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
+    });
 
-  // Close mobile nav on link click
-  navLinks && navLinks.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
+    // Auto-close on nav link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  // Close on outside click
+  document.addEventListener('click', e => {
+    if (navLinks && !navbar.contains(e.target)) {
       navLinks.classList.remove('open');
       hamburger && hamburger.classList.remove('open');
-    });
+    }
   });
 })();
-
 
 /* ── 2. Scroll-to-top button ───────────────────── */
 (function () {
@@ -48,13 +60,12 @@
   });
 })();
 
-
 /* ── 3. Scroll-reveal via IntersectionObserver ─── */
 (function () {
-  const elements = document.querySelectorAll('.reveal');
-  if (!elements.length) return;
+  const items = document.querySelectorAll('.reveal');
+  if (!items.length) return;
 
-  const observer = new IntersectionObserver((entries) => {
+  const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
@@ -63,34 +74,35 @@
     });
   }, { threshold: 0.12 });
 
-  elements.forEach(el => observer.observe(el));
+  items.forEach(el => observer.observe(el));
 })();
-
 
 /* ── 4. Animated stat counters ─────────────────── */
 (function () {
-  const counters = document.querySelectorAll('.stat-number[data-count]');
-  if (!counters.length) return;
+  const numbers = document.querySelectorAll('.stat-number[data-count]');
+  if (!numbers.length) return;
 
-  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
 
   function animateCounter(el) {
     const target   = parseInt(el.getAttribute('data-count'), 10);
     const duration = 1600;
     const start    = performance.now();
 
-    function tick(now) {
+    function step(now) {
       const elapsed  = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      const current  = Math.round(easeOutCubic(progress) * target);
-      el.textContent = current.toLocaleString();
-      if (progress < 1) requestAnimationFrame(tick);
+      const value    = Math.floor(easeOutCubic(progress) * target);
+      el.textContent = value.toLocaleString();
+      if (progress < 1) requestAnimationFrame(step);
     }
 
-    requestAnimationFrame(tick);
+    requestAnimationFrame(step);
   }
 
-  const observer = new IntersectionObserver((entries) => {
+  const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         animateCounter(entry.target);
@@ -99,89 +111,80 @@
     });
   }, { threshold: 0.5 });
 
-  counters.forEach(c => observer.observe(c));
+  numbers.forEach(el => observer.observe(el));
 })();
 
-
-/* ── 5. Hero floating emoji particles ──────────── */
+/* ── 5. Hero floating particles ────────────────── */
 (function () {
   const container = document.getElementById('heroParticles');
   if (!container) return;
 
-  const EMOJIS = ['🌶️','🍛','🧄','🌿','🍅','🫚','🍗','🥘','🌱','🍃','✨','🔥','🍲','🥗','🫙','🍚','🧅','🌾'];
+  const emojis = ['🌶️','🍛','🍲','🧄','🌿','🍅','🧅','🍋','🥬','🍗','🍚','🥘','🫓','🍮','🍨','🧆','🥗','🍱'];
+  const count   = 18;
 
-  for (let i = 0; i < 18; i++) {
-    const el = document.createElement('span');
-    el.className = 'particle';
-    el.textContent = EMOJIS[i % EMOJIS.length];
+  for (let i = 0; i < count; i++) {
+    const p    = document.createElement('span');
+    p.classList.add('particle');
+    p.textContent = emojis[i % emojis.length];
 
-    const size     = Math.random() * 20 + 16;
-    const leftPct  = Math.random() * 100;
-    const duration = Math.random() * 12 + 10;
-    const delay    = Math.random() * 14;
-
-    el.style.cssText = `
+    const size = 14 + Math.random() * 18;
+    p.style.cssText = `
       font-size: ${size}px;
-      left: ${leftPct}%;
-      animation-duration: ${duration}s;
-      animation-delay: -${delay}s;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${10 + Math.random() * 14}s;
+      animation-delay: ${-Math.random() * 14}s;
     `;
-    container.appendChild(el);
+    container.appendChild(p);
   }
 })();
 
-
-/* ── 6. Menu category filter ────────────────────── */
+/* ── 6. Menu filter + scroll-spy ───────────────── */
 (function () {
   const filterBtns = document.querySelectorAll('.filter-btn');
   if (!filterBtns.length) return;
 
+  // Click: scroll to section
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Update active state
+      const filter = btn.getAttribute('data-filter');
+
+      // Activate button
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      const filter = btn.getAttribute('data-filter');
-
       if (filter === 'all') {
-        // Smooth scroll to top of menu content
-        const firstSection = document.querySelector('.menu-section');
-        firstSection && firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
-      // Scroll to the matching category section
       const target = document.getElementById(filter);
       if (target) {
-        const offset = 120; // account for sticky navbar + filter bar
+        const offset = 140; // navbar + filter bar height
         const top    = target.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top, behavior: 'smooth' });
       }
     });
   });
 
-  // Highlight active filter on scroll
-  const sections = document.querySelectorAll('.menu-section[data-category]');
+  // Scroll-spy: highlight active filter as user scrolls
+  const sections = document.querySelectorAll('[data-category]');
   if (!sections.length) return;
 
-  const scrollSpy = new IntersectionObserver((entries) => {
+  const spyObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const cat = entry.target.getAttribute('data-category');
         filterBtns.forEach(b => {
-          const match = b.getAttribute('data-filter') === cat;
-          b.classList.toggle('active', match);
+          b.classList.toggle('active', b.getAttribute('data-filter') === cat);
         });
       }
     });
-  }, { threshold: 0.35, rootMargin: '-120px 0px -40% 0px' });
+  }, { threshold: 0.25, rootMargin: '-140px 0px -50% 0px' });
 
-  sections.forEach(s => scrollSpy.observe(s));
+  sections.forEach(s => spyObserver.observe(s));
 })();
 
-
-/* ── 7. Add-to-order toast ──────────────────────── */
+/* ── 7. Add-to-order toast notification ─────────── */
 (function () {
   // Create toast element
   const toast = document.createElement('div');
@@ -191,127 +194,138 @@
     bottom: 80px;
     right: 24px;
     background: linear-gradient(135deg, #e63939, #ff7f2a);
-    color: white;
-    padding: 12px 20px;
+    color: #fff;
+    padding: 14px 22px;
     border-radius: 50px;
     font-size: .88rem;
     font-weight: 700;
-    box-shadow: 0 6px 24px rgba(230, 57, 57, .45);
+    box-shadow: 0 6px 24px rgba(230,57,57,.45);
     z-index: 9999;
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity .3s, transform .3s;
+    transform: translateY(16px) scale(.92);
+    transition: opacity .3s ease, transform .3s ease;
     pointer-events: none;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   `;
   document.body.appendChild(toast);
 
-  let toastTimeout;
+  let toastTimer = null;
 
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(16px)';
+  function showToast(name) {
+    clearTimeout(toastTimer);
+    toast.innerHTML = `<span>🛒</span> "${name}" added to order!`;
+    toast.style.opacity  = '1';
+    toast.style.transform = 'translateY(0) scale(1)';
+
+    toastTimer = setTimeout(() => {
+      toast.style.opacity  = '0';
+      toast.style.transform = 'translateY(16px) scale(.92)';
     }, 2400);
   }
 
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     const btn = e.target.closest('.add-btn');
     if (!btn) return;
 
-    const card = btn.closest('.dish-card, .menu-item');
-    const name = card ? card.querySelector('h3')?.textContent : 'Item';
-    showToast(`🛒 ${name} added to your order!`);
+    const card = btn.closest('[class*="dish-card"], [class*="menu-item"]');
+    const name = card ? (card.querySelector('h3') || { textContent: 'Item' }).textContent : 'Item';
+    showToast(name.trim());
 
-    // Brief scale animation on the button
-    btn.style.transform = 'scale(1.35)';
-    setTimeout(() => { btn.style.transform = ''; }, 220);
+    // Brief visual feedback on button
+    btn.textContent = '✓';
+    btn.style.background = '#28b44a';
+    setTimeout(() => {
+      btn.textContent = '+';
+      btn.style.background = '';
+    }, 1200);
   });
 })();
 
-
-/* ── 8. Contact form validation & submit ─────────── */
+/* ── 8. Contact form validation ─────────────────── */
 (function () {
-  const form    = document.getElementById('contactForm');
-  const success = document.getElementById('formSuccess');
-  const reset   = document.getElementById('resetForm');
+  const form       = document.getElementById('contactForm');
+  const successBox = document.getElementById('formSuccess');
+  const resetBtn   = document.getElementById('resetForm');
+
   if (!form) return;
 
-  // Field validators
-  const validators = {
-    firstName: (v) => v.trim().length >= 2 ? '' : 'First name must be at least 2 characters.',
-    lastName:  (v) => v.trim().length >= 2 ? '' : 'Last name must be at least 2 characters.',
-    email:     (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : 'Please enter a valid email address.',
-    subject:   (v) => v !== '' ? '' : 'Please select a subject.',
-    message:   (v) => v.trim().length >= 10 ? '' : 'Message must be at least 10 characters.',
-  };
-
-  // Show / clear inline error
-  function showError(field, message) {
-    let errEl = field.parentElement.querySelector('.field-error');
-    if (!errEl) {
-      errEl = document.createElement('span');
-      errEl.className = 'field-error';
-      errEl.style.cssText = 'font-size:.75rem;color:#ff6b6b;margin-top:4px;display:block;';
-      field.parentElement.appendChild(errEl);
-    }
-    errEl.textContent = message;
-    field.style.borderColor = message ? '#e63939' : '';
+  function isEmail(val) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
   }
 
-  function clearError(field) { showError(field, ''); }
+  function getError(field) {
+    let el = field.nextElementSibling;
+    if (!el || !el.classList.contains('field-error')) {
+      el = document.createElement('span');
+      el.className = 'field-error';
+      el.style.cssText = 'display:block;color:#e63939;font-size:.78rem;margin-top:5px;';
+      field.after(el);
+    }
+    return el;
+  }
+
+  function validateField(field) {
+    const val = field.value.trim();
+    const errEl = getError(field);
+
+    if (field.required && !val) {
+      errEl.textContent = `${field.labels?.[0]?.textContent.replace(' *','') || 'This field'} is required.`;
+      field.style.borderColor = '#e63939';
+      return false;
+    }
+    if (field.type === 'email' && val && !isEmail(val)) {
+      errEl.textContent = 'Please enter a valid email address.';
+      field.style.borderColor = '#e63939';
+      return false;
+    }
+    // Clear error
+    errEl.textContent = '';
+    field.style.borderColor = '#28b44a';
+    return true;
+  }
 
   // Blur validation
-  Object.keys(validators).forEach(name => {
-    const field = form.elements[name];
-    if (!field) return;
+  form.querySelectorAll('input, select, textarea').forEach(field => {
     field.addEventListener('blur', () => {
-      const err = validators[name](field.value);
-      showError(field, err);
+      if (field.name !== 'phone') validateField(field);
     });
-    field.addEventListener('input', () => clearError(field));
   });
 
   // Submit
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', e => {
     e.preventDefault();
 
-    let valid = true;
-    Object.keys(validators).forEach(name => {
-      const field = form.elements[name];
-      if (!field) return;
-      const err = validators[name](field.value);
-      showError(field, err);
-      if (err) valid = false;
-    });
+    const fields = [...form.querySelectorAll('input[required], select[required], textarea[required]')];
+    const allValid = fields.every(f => validateField(f));
 
-    if (!valid) return;
+    if (!allValid) return;
+
+    const submitBtn = form.querySelector('[type="submit"]');
+    submitBtn.textContent = '⏳ Sending…';
+    submitBtn.disabled = true;
 
     // Simulate async submit
-    const submitBtn = form.querySelector('[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span>⏳</span> Sending…';
-
-    await new Promise(r => setTimeout(r, 1400));
-
-    // Show success state
-    form.style.display = 'none';
-    success.style.display = 'block';
+    setTimeout(() => {
+      form.style.display       = 'none';
+      successBox.style.display = 'block';
+    }, 1200);
   });
 
-  // Reset form
-  reset && reset.addEventListener('click', () => {
-    form.reset();
-    form.querySelectorAll('.field-error').forEach(el => el.textContent = '');
-    form.querySelectorAll('input, select, textarea').forEach(f => f.style.borderColor = '');
-    const submitBtn = form.querySelector('[type="submit"]');
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<span>✉️</span> Send Message';
-    form.style.display = 'block';
-    success.style.display = 'none';
-  });
+  // Reset
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      form.reset();
+      form.querySelectorAll('.field-error').forEach(el => (el.textContent = ''));
+      form.querySelectorAll('input, select, textarea').forEach(f => (f.style.borderColor = ''));
+      const submitBtn = form.querySelector('[type="submit"]');
+      if (submitBtn) {
+        submitBtn.innerHTML = '<span>✉️</span> Send Message';
+        submitBtn.disabled = false;
+      }
+      form.style.display       = '';
+      successBox.style.display = 'none';
+    });
+  }
 })();
