@@ -1,44 +1,38 @@
-/* =============================================
+/* ==============================================
    Spicy Kitchen — script.js
-   All interactive behaviours across 3 pages
-   ============================================= */
+   Interactive JS for all 3 pages
+   ============================================== */
 
-/* ── 1. NAVBAR — scroll sticky + hamburger ── */
+/* ── 1. NAVBAR ── */
 (function () {
-  const navbar     = document.getElementById('navbar');
-  const hamburger  = document.getElementById('hamburger');
-  const navLinks   = document.getElementById('navLinks');
+  const navbar    = document.getElementById('navbar');
+  const hamburger = document.getElementById('hamburger');
+  const navLinks  = document.getElementById('navLinks');
 
   if (!navbar) return;
 
-  // Scroll: add/remove .scrolled class
-  function onScroll() {
-    if (window.scrollY > 60) {
+  // Scroll sticky
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
       navbar.classList.add('scrolled');
     } else {
-      // Keep scrolled on sub-pages that start with it
-      if (!navbar.classList.contains('scrolled') || window.scrollY === 0) {
-        if (!document.querySelector('.navbar.scrolled[id]')) {
-          navbar.classList.remove('scrolled');
-        }
-      }
+      navbar.classList.remove('scrolled');
     }
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
+  }, { passive: true });
 
   // Hamburger toggle
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
-      const open = hamburger.classList.toggle('open');
-      navLinks.classList.toggle('open', open);
-      hamburger.setAttribute('aria-expanded', open);
+      const isOpen = navLinks.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', String(isOpen));
     });
 
-    // Auto-close on link click
+    // Close when a link is clicked
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        hamburger.classList.remove('open');
         navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
         hamburger.setAttribute('aria-expanded', 'false');
       });
     });
@@ -46,15 +40,16 @@
     // Close on outside click
     document.addEventListener('click', (e) => {
       if (!navbar.contains(e.target)) {
-        hamburger.classList.remove('open');
         navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
         hamburger.setAttribute('aria-expanded', 'false');
       }
     });
   }
 })();
 
-/* ── 2. SCROLL-TO-TOP BUTTON ── */
+
+/* ── 2. SCROLL-TO-TOP ── */
 (function () {
   const btn = document.getElementById('scrollTop');
   if (!btn) return;
@@ -68,108 +63,94 @@
   });
 })();
 
-/* ── 3. SCROLL-REVEAL via IntersectionObserver ── */
+
+/* ── 3. SCROLL-REVEAL ── */
 (function () {
   const els = document.querySelectorAll('.reveal');
   if (!els.length) return;
 
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12 }
-  );
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
 
-  els.forEach(el => io.observe(el));
+  els.forEach(el => observer.observe(el));
 })();
+
 
 /* ── 4. ANIMATED STAT COUNTERS ── */
 (function () {
   const counters = document.querySelectorAll('.stat-number[data-count]');
   if (!counters.length) return;
 
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
   function animateCounter(el) {
-    const target   = parseInt(el.dataset.count, 10);
+    const target = parseInt(el.dataset.count, 10);
     const duration = 1600;
-    const start    = performance.now();
+    const start = performance.now();
 
     function tick(now) {
-      const elapsed  = now - start;
+      const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      const value    = Math.round(easeOutCubic(progress) * target);
+      const value = Math.round(easeOutCubic(progress) * target);
       el.textContent = value.toLocaleString();
       if (progress < 1) requestAnimationFrame(tick);
-      else el.textContent = target.toLocaleString();
     }
     requestAnimationFrame(tick);
   }
 
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animateCounter(entry.target);
-          io.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.5 }
-  );
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
 
-  counters.forEach(el => io.observe(el));
+  counters.forEach(c => observer.observe(c));
 })();
+
 
 /* ── 5. HERO FLOATING PARTICLES ── */
 (function () {
   const container = document.getElementById('heroParticles');
   if (!container) return;
 
-  const emojis = ['🌶️', '🧄', '🌿', '🍋', '🫙', '🌰', '🍃', '🌾', '🧅', '🫚',
-                  '✨', '🔥', '🍽️', '🥄', '🫕', '🍛', '🌱', '🌺'];
+  const emojis = ['🌶️','🍛','🧄','🌿','🫙','🍚','🥗','🔥','🍢','🍮','☕','🥭','🧅','🌹','🍖','🥬','🧀','🍰'];
 
-  for (let i = 0; i < 18; i++) {
+  emojis.forEach(emoji => {
     const span = document.createElement('span');
     span.className = 'particle';
-    span.textContent = emojis[i % emojis.length];
-
-    const size     = 14 + Math.random() * 18;          // 14–32px
-    const left     = Math.random() * 100;               // 0–100%
-    const duration = 10 + Math.random() * 14;           // 10–24s
-    const delay    = -(Math.random() * duration);       // stagger
-
+    span.textContent = emoji;
     span.style.cssText = `
-      font-size: ${size}px;
-      left: ${left}%;
-      animation-duration: ${duration}s;
-      animation-delay: ${delay}s;
+      font-size: ${14 + Math.random() * 18}px;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${10 + Math.random() * 14}s;
+      animation-delay: -${Math.random() * 12}s;
     `;
     container.appendChild(span);
-  }
+  });
 })();
 
-/* ── 6. MENU FILTER (menu.html only) ── */
+
+/* ── 6. MENU FILTER + SCROLL-SPY ── */
 (function () {
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const sections   = document.querySelectorAll('.menu-section');
   if (!filterBtns.length) return;
 
-  // Click → scroll to section
+  // Click: scroll to section
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      const filter = btn.dataset.filter;
-
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
+      const filter = btn.dataset.filter;
       if (filter === 'all') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
@@ -177,74 +158,71 @@
 
       const target = document.getElementById(filter);
       if (target) {
-        const offset = 140;
-        const top    = target.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top, behavior: 'smooth' });
+        const offset = target.getBoundingClientRect().top + window.scrollY - 140;
+        window.scrollTo({ top: offset, behavior: 'smooth' });
       }
     });
   });
 
-  // Scroll-spy: highlight active filter while scrolling
-  function updateActiveFilter() {
-    let current = 'all';
-    const threshold = window.innerHeight * 0.25;
+  // Scroll-spy: highlight btn for visible section
+  const sections = document.querySelectorAll('.menu-section[data-category]');
+  if (!sections.length) return;
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const viewportThreshold = window.innerHeight * 0.25;
 
     sections.forEach(section => {
       const rect = section.getBoundingClientRect();
-      if (rect.top < threshold && rect.bottom > 0) {
-        current = section.dataset.category;
+      if (rect.top < viewportThreshold && rect.bottom > 0) {
+        const cat = section.dataset.category;
+        filterBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.filter === cat);
+        });
       }
     });
-
-    filterBtns.forEach(btn => {
-      const isActive = btn.dataset.filter === current ||
-        (current === 'all' && btn.dataset.filter === 'all');
-      btn.classList.toggle('active', isActive);
-    });
-  }
-
-  window.addEventListener('scroll', updateActiveFilter, { passive: true });
+  }, { passive: true });
 })();
 
-/* ── 7. CART TOAST NOTIFICATION ── */
+
+/* ── 7. ADD-TO-ORDER TOAST ── */
 (function () {
-  // Create toast element once
   const toast = document.createElement('div');
   toast.id = 'cartToast';
-  Object.assign(toast.style, {
-    position:     'fixed',
-    bottom:       '24px',
-    left:         '50%',
-    transform:    'translateX(-50%) translateY(80px)',
-    background:   'linear-gradient(135deg, #e63939, #ff7f2a)',
-    color:        '#fff',
-    padding:      '12px 28px',
-    borderRadius: '50px',
-    fontSize:     '.9rem',
-    fontWeight:   '700',
-    zIndex:       '9999',
-    boxShadow:    '0 8px 32px rgba(230,57,57,.5)',
-    transition:   'transform .3s ease, opacity .3s ease',
-    opacity:      '0',
-    pointerEvents:'none',
-    whiteSpace:   'nowrap',
-  });
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 84px;
+    right: 28px;
+    background: linear-gradient(135deg, #e63939, #ff7f2a);
+    color: #fff;
+    padding: 13px 22px;
+    border-radius: 50px;
+    font-size: .875rem;
+    font-weight: 700;
+    box-shadow: 0 8px 28px rgba(230,57,57,.5);
+    z-index: 1200;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .3s ease, transform .3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  `;
+  toast.textContent = '🛒 Added to your order!';
   document.body.appendChild(toast);
 
-  let hideTimer = null;
+  let toastTimer = null;
 
-  function showToast(name) {
-    toast.textContent = `✅ "${name}" added to your order!`;
-    toast.style.transform   = 'translateX(-50%) translateY(0)';
-    toast.style.opacity     = '1';
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => {
-      toast.style.transform = 'translateX(-50%) translateY(80px)';
-      toast.style.opacity   = '0';
+  function showToast(itemName) {
+    toast.textContent = `🛒 ${itemName} added!`;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(16px)';
     }, 2400);
   }
 
-  // Delegate click on all .add-btn elements
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.add-btn');
     if (!btn) return;
@@ -253,8 +231,6 @@
     const name = card ? (card.querySelector('h3')?.textContent || 'Item') : 'Item';
 
     showToast(name);
-
-    // Brief button feedback
     btn.textContent = '✓';
     btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
     setTimeout(() => {
@@ -264,75 +240,69 @@
   });
 })();
 
-/* ── 8. CONTACT FORM VALIDATION ── */
+
+/* ── 8. CONTACT FORM ── */
 (function () {
   const form    = document.getElementById('contactForm');
   const success = document.getElementById('formSuccess');
   const reset   = document.getElementById('resetForm');
-  if (!form) return;
+  if (!form || !success) return;
 
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  function getError(field) {
-    let err = field.parentElement.querySelector('.field-error');
+  function showError(input, msg) {
+    let err = input.parentElement.querySelector('.field-error');
     if (!err) {
       err = document.createElement('span');
       err.className = 'field-error';
-      Object.assign(err.style, {
-        display:   'block',
-        fontSize:  '.78rem',
-        color:     '#ef4444',
-        marginTop: '4px',
-      });
-      field.parentElement.appendChild(err);
+      err.style.cssText = 'color:#ff6b6b;font-size:.75rem;margin-top:4px;display:block;';
+      input.parentElement.appendChild(err);
     }
-    return err;
+    err.textContent = msg;
+    input.style.borderColor = '#e63939';
   }
 
-  function validateField(field) {
-    const err = getError(field);
-    const val = field.value.trim();
+  function clearError(input) {
+    const err = input.parentElement.querySelector('.field-error');
+    if (err) err.textContent = '';
+    input.style.borderColor = '';
+  }
 
-    if (field.required && !val) {
-      err.textContent = `${field.labels?.[0]?.textContent?.replace('*','').trim() || 'This field'} is required.`;
-      field.style.borderColor = '#ef4444';
+  function validateField(input) {
+    const val = input.value.trim();
+    if (input.required && !val) {
+      showError(input, 'This field is required.');
       return false;
     }
-    if (field.type === 'email' && val && !emailRe.test(val)) {
-      err.textContent = 'Please enter a valid email address.';
-      field.style.borderColor = '#ef4444';
+    if (input.type === 'email' && val && !EMAIL_RE.test(val)) {
+      showError(input, 'Please enter a valid email address.');
       return false;
     }
-    err.textContent = '';
-    field.style.borderColor = '#22c55e';
+    clearError(input);
     return true;
   }
 
-  // Blur-time validation
+  // Blur validation
   form.querySelectorAll('input, select, textarea').forEach(field => {
-    field.addEventListener('blur', () => validateField(field));
-    field.addEventListener('input', () => {
-      if (field.style.borderColor === 'rgb(239, 68, 68)') validateField(field);
-    });
+    field.addEventListener('blur',  () => validateField(field));
+    field.addEventListener('input', () => { if (field.style.borderColor) validateField(field); });
   });
 
   // Submit
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-
+    const fields = form.querySelectorAll('input[required], select[required], textarea[required]');
     let valid = true;
-    form.querySelectorAll('input, select, textarea').forEach(field => {
-      if (!validateField(field)) valid = false;
-    });
+    fields.forEach(f => { if (!validateField(f)) valid = false; });
     if (!valid) return;
 
     const submitBtn = form.querySelector('[type="submit"]');
-    submitBtn.disabled    = true;
     submitBtn.textContent = '⏳ Sending…';
+    submitBtn.disabled = true;
 
     setTimeout(() => {
-      form.style.display    = 'none';
-      if (success) success.style.display = 'block';
+      form.style.display     = 'none';
+      success.style.display  = 'block';
     }, 1200);
   });
 
@@ -340,18 +310,13 @@
   if (reset) {
     reset.addEventListener('click', () => {
       form.reset();
-      form.querySelectorAll('input, select, textarea').forEach(f => {
-        f.style.borderColor = '';
-        const err = f.parentElement.querySelector('.field-error');
-        if (err) err.textContent = '';
-      });
+      form.querySelectorAll('.field-error').forEach(e => e.textContent = '');
+      form.querySelectorAll('input, select, textarea').forEach(f => f.style.borderColor = '');
       const submitBtn = form.querySelector('[type="submit"]');
-      if (submitBtn) {
-        submitBtn.disabled    = false;
-        submitBtn.textContent = '✉️ Send Message';
-      }
+      submitBtn.textContent = '✉️ Send Message';
+      submitBtn.disabled = false;
+      success.style.display = 'none';
       form.style.display    = '';
-      if (success) success.style.display = 'none';
     });
   }
 })();
