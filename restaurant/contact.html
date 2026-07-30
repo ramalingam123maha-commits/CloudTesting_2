@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Spicy Kitchen</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌶️</text></svg>" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">🌶️</span>
+        <span class="logo-text">Spicy <span>Kitchen</span></span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+        <li><a href="contact.html" class="btn-nav">Reserve Table</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== CONTACT HERO ===== -->
+  <header class="contact-hero">
+    <div>
+      <span class="section-badge" style="position:relative;z-index:1;">Get in Touch</span>
+      <h1 style="margin-top:12px;">Contact <span>Us</span></h1>
+      <p>We'd love to hear from you — reservations, enquiries, or just to say hi!</p>
+    </div>
+  </header>
+
+  <!-- ===== CONTACT SECTION ===== -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- LEFT: Info Cards -->
+        <div class="contact-info">
+
+          <div class="info-card reveal">
+            <div class="info-icon">📍</div>
+            <div>
+              <h4>Our Location</h4>
+              <p>123 Flavor Street, Food Town<br />New York, NY 10001, USA</p>
+            </div>
+          </div>
+
+          <div class="info-card reveal delay-1">
+            <div class="info-icon">📞</div>
+            <div>
+              <h4>Phone Number</h4>
+              <p>
+                <a href="tel:+12125550123">+1 (212) 555-0123</a><br />
+                <a href="tel:+12125550124">+1 (212) 555-0124</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="info-card reveal delay-2">
+            <div class="info-icon">✉️</div>
+            <div>
+              <h4>Email Address</h4>
+              <p>
+                <a href="mailto:hello@spicykitchen.com">hello@spicykitchen.com</a><br />
+                <a href="mailto:reservations@spicykitchen.com">reservations@spicykitchen.com</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="info-card reveal delay-3">
+            <div class="info-icon">🕐</div>
+            <div>
+              <h4>Opening Hours</h4>
+              <div class="hours-grid">
+                <div class="hours-row"><strong>Monday – Friday</strong> <span>11:00 AM – 11:00 PM</span></div>
+                <div class="hours-row"><strong>Saturday</strong> <span>10:00 AM – 11:30 PM</span></div>
+                <div class="hours-row"><strong>Sunday</strong> <span>10:00 AM – 10:30 PM</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div class="info-card reveal delay-4" style="flex-direction:column;gap:12px;">
+            <h4 style="font-family:var(--font-heading);font-size:.98rem;">Follow Us</h4>
+            <div class="social-links" style="margin-top:0;">
+              <a href="#" title="Facebook">📘</a>
+              <a href="#" title="Instagram">📸</a>
+              <a href="#" title="Twitter">🐦</a>
+              <a href="#" title="YouTube">▶️</a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Contact Form -->
+        <div class="contact-form-wrap reveal delay-2">
+          <h3>Send Us a Message</h3>
+          <p>Fill out the form below and we'll get back to you within 24 hours.</p>
+
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name *</label>
+                <input type="text" id="firstName" name="firstName" placeholder="John" required />
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name *</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Doe" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required />
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Subject *</label>
+              <select id="subject" name="subject" required>
+                <option value="" disabled selected>Select a subject…</option>
+                <option value="reservation">Table Reservation</option>
+                <option value="catering">Private Event / Catering</option>
+                <option value="feedback">Feedback</option>
+                <option value="delivery">Delivery Query</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-row" id="guestDateRow">
+              <div class="form-group">
+                <label for="date">Preferred Date</label>
+                <input type="date" id="date" name="date" />
+              </div>
+              <div class="form-group">
+                <label for="guests">Number of Guests</label>
+                <select id="guests" name="guests">
+                  <option value="">Select…</option>
+                  <option value="1-2">1 – 2</option>
+                  <option value="3-4">3 – 4</option>
+                  <option value="5-6">5 – 6</option>
+                  <option value="7-10">7 – 10</option>
+                  <option value="10+">10+</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message *</label>
+              <textarea id="message" name="message" placeholder="Write your message here…" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+              <span>📨</span> Send Message
+            </button>
+          </form>
+
+          <!-- Success State -->
+          <div class="form-success" id="formSuccess">
+            <span class="success-icon">🎉</span>
+            <h4>Message Sent!</h4>
+            <p>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+            <button class="btn btn-primary" id="resetForm" style="margin-top:20px;">Send Another Message</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MAP SECTION ===== -->
+  <section class="map-section">
+    <div class="container">
+      <div class="text-center reveal" style="margin-bottom:30px;">
+        <span class="section-badge">Find Us</span>
+        <h2 class="section-title">We Are <span>Right Here</span></h2>
+        <div class="divider center"></div>
+      </div>
+      <div class="map-placeholder reveal">
+        <div class="map-icon">📍</div>
+        <p>123 Flavor Street, Food Town, NY 10001</p>
+        <span>Open Daily · 11:00 AM – 11:00 PM</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <div class="cta-banner">
+    <div class="container reveal">
+      <h2>Can't Wait to <em>Taste Us?</em></h2>
+      <p>Order online, call us, or just walk in — we're always ready to serve!</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="tel:+12125550123" class="btn btn-outline">
+          <span>📞</span> Call Now
+        </a>
+        <a href="menu.html" class="btn btn-secondary">
+          <span>🍽️</span> View Menu
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-text">🌶️ Spicy <span>Kitchen</span></div>
+          <p>Love the Food. Live the Experience. Spicy Kitchen has been serving bold, authentic flavors since 2004.</p>
+          <div class="social-links">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="Twitter">🐦</a>
+            <a href="#" title="YouTube">▶️</a>
+          </div>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">→ Home</a></li>
+            <li><a href="menu.html">→ Our Menu</a></li>
+            <li><a href="contact.html">→ Contact Us</a></li>
+            <li><a href="contact.html">→ Reserve a Table</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Our Menu</h4>
+          <ul class="footer-links">
+            <li><a href="menu.html">→ Starters</a></li>
+            <li><a href="menu.html">→ Main Course</a></li>
+            <li><a href="menu.html">→ Breads & Rice</a></li>
+            <li><a href="menu.html">→ Desserts</a></li>
+            <li><a href="menu.html">→ Drinks</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact Info</h4>
+          <ul class="footer-contact">
+            <li><span>📍</span> 123 Flavor Street, Food Town, NY 10001</li>
+            <li><span>📞</span> <a href="tel:+12125550123">+1 (212) 555-0123</a></li>
+            <li><span>✉️</span> <a href="mailto:hello@spicykitchen.com">hello@spicykitchen.com</a></li>
+            <li><span>🕐</span> Mon–Sun: 11:00 AM – 11:00 PM</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 <span>Spicy Kitchen</span>. All rights reserved.</p>
+        <p>Made with ❤️ &amp; 🌶️ for food lovers everywhere</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
