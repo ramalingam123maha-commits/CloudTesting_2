@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us — Spicy Kitchen</title>
+  <title>Contact — Spicy Kitchen</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌶️</text></svg>" />
 </head>
@@ -28,12 +28,12 @@
     </div>
   </nav>
 
-  <!-- ===== CONTACT HERO ===== -->
+  <!-- ===== HERO ===== -->
   <header class="contact-hero">
     <div>
       <span class="section-badge" style="position:relative;z-index:1;">Get In Touch</span>
       <h1 style="margin-top:12px;">Contact <span>Spicy Kitchen</span></h1>
-      <p>Reserve a table, ask about catering, or just say hello — we'd love to hear from you.</p>
+      <p>Have a question, want to make a reservation, or planning a private event? We'd love to hear from you!</p>
     </div>
   </header>
 
@@ -42,24 +42,24 @@
     <div class="container">
       <div class="contact-grid">
 
-        <!-- Info Cards -->
+        <!-- ── Info Cards ── -->
         <div class="contact-info">
 
           <div class="info-card reveal">
             <div class="info-icon">📍</div>
             <div>
-              <h4>Our Location</h4>
-              <p>123 Flavor Street, Food Town<br />New York, NY 10001, USA</p>
+              <h4>Visit Us</h4>
+              <p>123 Flavor Street, Food Town<br />New York, NY 10001<br />United States</p>
             </div>
           </div>
 
           <div class="info-card reveal delay-1">
             <div class="info-icon">📞</div>
             <div>
-              <h4>Phone Numbers</h4>
+              <h4>Call Us</h4>
               <p>
-                <a href="tel:+12125550123">+1 (212) 555-0123</a> — Reservations<br />
-                <a href="tel:+12125550456">+1 (212) 555-0456</a> — Delivery Orders
+                <a href="tel:+12125550123">+1 (212) 555-0123</a><br />
+                <a href="tel:+12125550124">+1 (212) 555-0124</a> (Reservations)
               </p>
             </div>
           </div>
@@ -69,8 +69,8 @@
             <div>
               <h4>Email Us</h4>
               <p>
-                <a href="mailto:hello@spicykitchen.com">hello@spicykitchen.com</a> — General<br />
-                <a href="mailto:events@spicykitchen.com">events@spicykitchen.com</a> — Private Events
+                <a href="mailto:hello@spicykitchen.com">hello@spicykitchen.com</a><br />
+                <a href="mailto:events@spicykitchen.com">events@spicykitchen.com</a>
               </p>
             </div>
           </div>
@@ -80,100 +80,73 @@
             <div>
               <h4>Opening Hours</h4>
               <div class="hours-grid">
-                <div class="hours-row"><strong>Mon – Fri</strong><span>11:00 AM – 11:00 PM</span></div>
-                <div class="hours-row"><strong>Saturday</strong><span>10:00 AM – 11:30 PM</span></div>
-                <div class="hours-row"><strong>Sunday</strong><span>10:00 AM – 10:00 PM</span></div>
-                <div class="hours-row"><strong>Public Holidays</strong><span>12:00 PM – 9:00 PM</span></div>
+                <div class="hours-row"><strong>Monday – Thursday</strong><span>11am – 10pm</span></div>
+                <div class="hours-row"><strong>Friday – Saturday</strong><span>11am – 11:30pm</span></div>
+                <div class="hours-row"><strong>Sunday</strong><span>12pm – 10pm</span></div>
+                <div class="hours-row"><strong>Public Holidays</strong><span>12pm – 9pm</span></div>
               </div>
-            </div>
-          </div>
-
-          <div class="info-card reveal delay-4">
-            <div class="info-icon">🅿️</div>
-            <div>
-              <h4>Parking & Access</h4>
-              <p>Free street parking available. Wheelchair accessible entrance on the south side of the building.</p>
             </div>
           </div>
 
         </div>
 
-        <!-- Contact Form -->
+        <!-- ── Contact Form ── -->
         <div class="contact-form-wrap reveal delay-2">
           <h3>Send Us a Message</h3>
-          <p>Fill out the form below and our team will get back to you within 24 hours.</p>
+          <p>Fill in the form and we'll get back to you within 24 hours.</p>
 
           <form id="contactForm" novalidate>
             <div class="form-row">
               <div class="form-group">
                 <label for="firstName">First Name *</label>
-                <input type="text" id="firstName" name="firstName" placeholder="John" required />
+                <input type="text" id="firstName" name="firstName" placeholder="e.g. Priya" autocomplete="given-name" />
               </div>
               <div class="form-group">
                 <label for="lastName">Last Name *</label>
-                <input type="text" id="lastName" name="lastName" placeholder="Doe" required />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="email">Email Address *</label>
-                <input type="email" id="email" name="email" placeholder="john@example.com" required />
-              </div>
-              <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" placeholder="+1 (212) 555-0000" />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="subject">Subject *</label>
-                <select id="subject" name="subject" required>
-                  <option value="" disabled selected>Select a topic…</option>
-                  <option value="reservation">🍽️ Table Reservation</option>
-                  <option value="catering">🎉 Private Catering / Event</option>
-                  <option value="feedback">💬 Feedback / Review</option>
-                  <option value="order">🛒 Order Issue</option>
-                  <option value="career">💼 Career Opportunity</option>
-                  <option value="other">❓ Other</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="guests">Number of Guests</label>
-                <select id="guests" name="guests">
-                  <option value="">Not applicable</option>
-                  <option value="1-2">1–2 guests</option>
-                  <option value="3-5">3–5 guests</option>
-                  <option value="6-10">6–10 guests</option>
-                  <option value="11-20">11–20 guests</option>
-                  <option value="20+">20+ guests (event)</option>
-                </select>
+                <input type="text" id="lastName" name="lastName" placeholder="e.g. Sharma" autocomplete="family-name" />
               </div>
             </div>
 
             <div class="form-group">
-              <label for="message">Your Message *</label>
-              <textarea id="message" name="message" rows="5" placeholder="Tell us about your reservation, event, feedback, or anything else on your mind…" required></textarea>
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" />
             </div>
 
-            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:15px 30px;">
-              📨 Send Message
+            <div class="form-group">
+              <label for="phone">Phone Number (optional)</label>
+              <input type="tel" id="phone" name="phone" placeholder="+1 (212) 555-0100" autocomplete="tel" />
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Subject *</label>
+              <select id="subject" name="subject">
+                <option value="">— Select a topic —</option>
+                <option value="reservation">Table Reservation</option>
+                <option value="events">Private Event / Catering</option>
+                <option value="feedback">Feedback / Review</option>
+                <option value="menu">Menu Enquiry</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Your Message *</label>
+              <textarea id="message" name="message" placeholder="Tell us how we can help..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+              <span>📨</span> Send Message
             </button>
           </form>
 
           <!-- Success State -->
           <div class="form-success" id="formSuccess">
-            <span class="success-icon">🎉</span>
-            <h4>Message Sent!</h4>
-            <p>Thank you for reaching out! Our team will get back to you within 24 hours. In the meantime, feel free to browse our menu.</p>
-            <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px;">
-              <button id="resetForm" class="btn btn-primary">
-                ✉️ Send Another Message
-              </button>
-              <a href="menu.html" class="btn btn-secondary">
-                🍽️ View Menu
-              </a>
+            <span class="success-icon">✅</span>
+            <h4>Message Sent Successfully!</h4>
+            <p>Thank you for reaching out! Our team will get back to you within 24 hours. In the meantime, why not browse our menu?</p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;">
+              <a href="menu.html" class="btn btn-primary"><span>🍽️</span> View Menu</a>
+              <button id="resetForm" class="btn btn-secondary"><span>↩️</span> Send Another</button>
             </div>
           </div>
         </div>
@@ -182,19 +155,17 @@
     </div>
   </section>
 
-  <!-- ===== MAP SECTION ===== -->
+  <!-- ===== MAP PLACEHOLDER ===== -->
   <section class="map-section">
     <div class="container">
-      <div class="text-center reveal" style="margin-bottom:36px;">
-        <span class="section-badge">Find Us</span>
-        <h2 class="section-title" style="margin-top:12px;">We're Right <span>Here</span></h2>
-        <div class="divider center"></div>
-        <p class="section-sub">123 Flavor Street, Food Town, New York, NY 10001 — easy walking distance from Times Square.</p>
-      </div>
       <div class="map-placeholder reveal">
-        <div class="map-icon">📍</div>
-        <p>Spicy Kitchen — 123 Flavor Street, NY</p>
-        <span>Interactive map coming soon. Use Google Maps for directions.</span>
+        <div class="map-icon">🗺️</div>
+        <p>Find Us on the Map</p>
+        <span>123 Flavor Street, Food Town, New York, NY 10001</span>
+        <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer"
+           class="btn btn-primary" style="margin-top:16px;" title="Opens Google Maps">
+          <span>📍</span> Open in Google Maps
+        </a>
       </div>
     </div>
   </section>
@@ -202,14 +173,14 @@
   <!-- ===== CTA BANNER ===== -->
   <div class="cta-banner">
     <div class="container reveal">
-      <h2>Dine With Us <em>Tonight!</em></h2>
-      <p>Walk-ins are always welcome, but a reservation ensures your favorite table is waiting.</p>
+      <h2>Can't Wait? <em>Order Now!</em></h2>
+      <p>Browse our full menu and place your order for dine-in or speedy delivery — ready in under 30 minutes.</p>
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-        <a href="tel:+12125550123" class="btn btn-outline">
-          <span>📞</span> Call to Reserve
+        <a href="menu.html" class="btn btn-outline">
+          <span>🍽️</span> View Our Menu
         </a>
-        <a href="menu.html" class="btn btn-secondary">
-          <span>🍽️</span> Browse Menu
+        <a href="index.html" class="btn btn-secondary">
+          <span>🏠</span> Back to Home
         </a>
       </div>
     </div>
