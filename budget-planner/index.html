@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Monthly Budget Planner</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon">💰</span>
+        <div>
+          <h1>Monthly Budget Planner</h1>
+          <p class="subtitle">Track income, expenses, and savings goals</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <label class="month-picker">
+          <span>Month</span>
+          <input type="month" id="monthSelect" />
+        </label>
+        <button id="exportPdfBtn" class="btn btn-primary">
+          <span class="btn-icon">⬇</span> Export PDF
+        </button>
+      </div>
+    </header>
+
+    <main id="reportRoot" class="content">
+      <!-- Summary cards -->
+      <section class="summary-grid">
+        <div class="card summary-card income">
+          <span class="summary-label">Total Income</span>
+          <span class="summary-value" id="totalIncome">$0.00</span>
+        </div>
+        <div class="card summary-card expense">
+          <span class="summary-label">Total Expenses</span>
+          <span class="summary-value" id="totalExpense">$0.00</span>
+        </div>
+        <div class="card summary-card net">
+          <span class="summary-label">Net Savings</span>
+          <span class="summary-value" id="netSavings">$0.00</span>
+        </div>
+        <div class="card summary-card goal">
+          <div class="goal-header">
+            <span class="summary-label">Savings Goal</span>
+            <button id="editGoalBtn" class="link-btn">Edit</button>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-track">
+              <div class="progress-fill" id="goalProgressFill"></div>
+            </div>
+            <span class="progress-text" id="goalProgressText">$0 / $0 (0%)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Input + chart -->
+      <section class="main-grid">
+        <div class="card form-card">
+          <h2>Add Transaction</h2>
+          <form id="transactionForm">
+            <div class="form-row">
+              <label>
+                Type
+                <select id="txType" required>
+                  <option value="expense">Expense</option>
+                  <option value="income">Income</option>
+                </select>
+              </label>
+              <label>
+                Category
+                <select id="txCategory" required></select>
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Amount ($)
+                <input type="number" id="txAmount" min="0.01" step="0.01" placeholder="0.00" required />
+              </label>
+              <label>
+                Date
+                <input type="date" id="txDate" required />
+              </label>
+            </div>
+            <label class="full">
+              Description
+              <input type="text" id="txDescription" placeholder="e.g. Grocery shopping" maxlength="120" />
+            </label>
+            <button type="submit" class="btn btn-primary full-width">Add Transaction</button>
+          </form>
+        </div>
+
+        <div class="card chart-card">
+          <h2>Expense Breakdown by Category</h2>
+          <div class="chart-wrap">
+            <canvas id="categoryChart"></canvas>
+            <p id="chartEmptyState" class="empty-state">No expenses yet this month.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transaction table -->
+      <section class="card table-card">
+        <div class="table-header">
+          <h2>Transaction History</h2>
+          <span class="tx-count" id="txCount">0 transactions</span>
+        </div>
+        <div class="table-scroll">
+          <table id="txTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th class="align-right">Amount</th>
+                <th class="align-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="txTableBody"></tbody>
+          </table>
+          <p id="tableEmptyState" class="empty-state">No transactions recorded for this month yet.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Edit savings goal modal -->
+  <div id="goalModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Set Savings Goal</h3>
+      <label>
+        Goal amount for this month ($)
+        <input type="number" id="goalInput" min="0" step="0.01" placeholder="0.00" />
+      </label>
+      <div class="modal-actions">
+        <button id="cancelGoalBtn" class="btn btn-secondary">Cancel</button>
+        <button id="saveGoalBtn" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
