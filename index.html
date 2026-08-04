@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumière — Online Art Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --clr-bg:        #0d0d0d;
+      --clr-surface:   #161616;
+      --clr-border:    #2a2a2a;
+      --clr-text:      #e8e2d9;
+      --clr-muted:     #7a7265;
+      --clr-accent:    #c9a96e;
+      --clr-accent2:   #8b6f47;
+      --clr-white:     #f5f0ea;
+      --font-serif:    'Cormorant Garamond', Georgia, serif;
+      --font-sans:     'Inter', system-ui, sans-serif;
+      --transition:    0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius:        4px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; }
+
+    /* ─── Scrollbar ─────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--clr-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--clr-border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--clr-muted); }
+
+    /* ─── Header / Nav ──────────────────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      height: 70px;
+      background: rgba(13, 13, 13, 0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--clr-border);
+      animation: slideDown 0.7s ease both;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--clr-white);
+    }
+
+    .logo span { color: var(--clr-accent); font-style: italic; }
+
+    nav { display: flex; gap: 2rem; }
+
+    nav a {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--clr-muted);
+      transition: color var(--transition);
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--clr-accent);
+      transition: width var(--transition);
+    }
+
+    nav a:hover { color: var(--clr-accent); }
+    nav a:hover::after { width: 100%; }
+
+    /* ─── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,169,110,0.08) 0%, transparent 70%),
+        linear-gradient(160deg, #1a1208 0%, #0d0d0d 50%, #0a0a12 100%);
+    }
+
+    /* Animated floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      animation: float 12s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #c9a96e, transparent);
+      top: -100px; left: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #8b6f47, transparent);
+      bottom: 0; right: -80px;
+      animation-delay: -4s;
+    }
+
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #c9a96e, transparent);
+      top: 40%; left: 60%;
+      animation-delay: -8s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(30px, -40px) scale(1.05); }
+      66%       { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 1s ease 0.3s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--clr-white);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--clr-accent);
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      color: var(--clr-muted);
+      letter-spacing: 0.04em;
+      max-width: 460px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2.2rem;
+      border: 1px solid var(--clr-accent);
+      color: var(--clr-accent);
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: transparent;
+      border-radius: var(--radius);
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+    }
+
+    .btn:hover {
+      background: var(--clr-accent);
+      color: var(--clr-bg);
+      transform: translateY(-2px);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--clr-muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: fadeUp 1s ease 1s both;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--clr-accent), transparent);
+      animation: scrollPulse 2s ease infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.1); }
+    }
+
+    /* ─── Section Wrapper ───────────────────────────────────────── */
+    .section {
+      padding: 6rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .section-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      color: var(--clr-white);
+      line-height: 1.15;
+    }
+
+    .section-title em { font-style: italic; color: var(--clr-accent); }
+
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--clr-accent), transparent);
+      margin: 1.2rem auto 0;
+    }
+
+    /* ─── Filter Buttons ────────────────────────────────────────── */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1.4rem;
+      border: 1px solid var(--clr-border);
+      background: transparent;
+      color: var(--clr-muted);
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 100px;
+      transition: all var(--transition);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--clr-accent);
+      color: var(--clr-accent);
+    }
+
+    .filter-btn.active {
+      background: var(--clr-accent);
+      border-color: var(--clr-accent);
+      color: var(--clr-bg);
+      font-weight: 500;
+    }
+
+    /* ─── Masonry Grid ──────────────────────────────────────────── */
+    .gallery-grid {
+      columns: 4 260px;
+      column-gap: 1rem;
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--clr-surface);
+      /* entrance animation */
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .gallery-item:nth-child(1)  { animation-delay: 0.05s; }
+    .gallery-item:nth-child(2)  { animation-delay: 0.10s; }
+    .gallery-item:nth-child(3)  { animation-delay: 0.15s; }
+    .gallery-item:nth-child(4)  { animation-delay: 0.20s; }
+    .gallery-item:nth-child(5)  { animation-delay: 0.25s; }
+    .gallery-item:nth-child(6)  { animation-delay: 0.30s; }
+    .gallery-item:nth-child(7)  { animation-delay: 0.35s; }
+    .gallery-item:nth-child(8)  { animation-delay: 0.40s; }
+    .gallery-item:nth-child(9)  { animation-delay: 0.45s; }
+    .gallery-item:nth-child(10) { animation-delay: 0.50s; }
+    .gallery-item:nth-child(11) { animation-delay: 0.55s; }
+    .gallery-item:nth-child(12) { animation-delay: 0.60s; }
+
+    /* Hide filtered-out items */
+    .gallery-item.hidden {
+      display: none;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── Zoom on hover ── */
+    .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.15) 55%, transparent 100%);
+      opacity: 0;
+      transition: opacity var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.2rem;
+    }
+
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    .overlay-title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--clr-white);
+      transform: translateY(8px);
+      transition: transform var(--transition);
+    }
+
+    .gallery-item:hover .overlay-title { transform: translateY(0); }
+
+    .overlay-meta {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-top: 0.25rem;
+      transform: translateY(8px);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.04s;
+    }
+
+    .gallery-item:hover .overlay-meta { transform: translateY(0); }
+
+    .overlay-expand {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity var(--transition), transform var(--transition);
+      color: white;
+    }
+
+    .gallery-item:hover .overlay-expand {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ─── Lightbox ──────────────────────────────────────────────── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(6px);
+      cursor: zoom-out;
+    }
+
+    .lightbox-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2.5rem;
+      align-items: center;
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .lightbox.open .lightbox-container {
+      transform: scale(1) translateY(0);
+    }
+
+    .lightbox-img-wrap {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+    }
+
+    .lightbox-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .lightbox-info {
+      color: var(--clr-text);
+    }
+
+    .lightbox-category {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .lightbox-title {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--clr-white);
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+
+    .lightbox-artist {
+      font-size: 0.8rem;
+      color: var(--clr-muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 1.5rem;
+    }
+
+    .lightbox-description {
+      font-size: 0.88rem;
+      color: var(--clr-muted);
+      line-height: 1.75;
+      border-top: 1px solid var(--clr-border);
+      padding-top: 1.5rem;
+    }
+
+    .lightbox-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .tag {
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--clr-border);
+      border-radius: 100px;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-muted);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -14px; right: -14px;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      color: var(--clr-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      z-index: 2;
+    }
+
+    .lightbox-close:hover {
+      background: var(--clr-accent);
+      border-color: var(--clr-accent);
+      color: var(--clr-bg);
+      transform: rotate(90deg);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--clr-white);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      z-index: 2;
+    }
+
+    .lightbox-nav:hover {
+      background: var(--clr-accent);
+      border-color: var(--clr-accent);
+      color: var(--clr-bg);
+    }
+
+    .lightbox-prev { left: -22px; }
+    .lightbox-next { right: -22px; }
+
+    /* ─── Stats Row ─────────────────────────────────────────────── */
+    .stats-section {
+      background: var(--clr-surface);
+      border-top: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--clr-border);
+      padding: 3rem;
+    }
+
+    .stats-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .stat-item {
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .stat-number {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--clr-accent);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--clr-muted);
+    }
+
+    /* ─── Artist Bio Section ────────────────────────────────────── */
+    .bio-section {
+      padding: 6rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .bio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .bio-image-wrap {
+      position: relative;
+    }
+
+    .bio-image-frame {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+
+    .bio-image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s ease;
+    }
+
+    .bio-image-frame:hover img { transform: scale(1.04); }
+
+    .bio-image-accent {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 180px; height: 180px;
+      border: 1px solid var(--clr-accent);
+      border-radius: 4px;
+      z-index: -1;
+      animation: rotateBorder 20s linear infinite;
+    }
+
+    @keyframes rotateBorder {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50%       { transform: rotate(3deg) scale(1.01); }
+    }
+
+    .bio-badge {
+      position: absolute;
+      top: -16px; left: -16px;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--clr-bg);
+      font-weight: 500;
+      animation: spin 20s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .bio-content { }
+
+    .bio-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .bio-name {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      font-weight: 300;
+      color: var(--clr-white);
+      line-height: 1.1;
+      margin-bottom: 0.3rem;
+    }
+
+    .bio-title-role {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--clr-accent);
+      margin-bottom: 1.8rem;
+    }
+
+    .bio-text {
+      font-size: 0.93rem;
+      color: var(--clr-muted);
+      line-height: 1.85;
+      margin-bottom: 1.2rem;
+    }
+
+    .bio-awards {
+      margin: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .award-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      background: var(--clr-surface);
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .award-item:hover {
+      border-color: var(--clr-accent);
+      transform: translateX(6px);
+    }
+
+    .award-icon {
+      font-size: 1.2rem;
+      min-width: 28px;
+    }
+
+    .award-text { font-size: 0.8rem; color: var(--clr-muted); }
+    .award-text strong { display: block; color: var(--clr-text); font-weight: 400; font-size: 0.85rem; margin-bottom: 0.1rem; }
+
+    .bio-socials {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+
+    .social-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--clr-border);
+      background: transparent;
+      color: var(--clr-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all var(--transition);
+    }
+
+    .social-btn:hover {
+      border-color: var(--clr-accent);
+      color: var(--clr-accent);
+      transform: translateY(-3px);
+    }
+
+    /* ─── Testimonial / Quote ───────────────────────────────────── */
+    .quote-section {
+      text-align: center;
+      padding: 5rem 3rem;
+      background: var(--clr-surface);
+      border-top: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--clr-border);
+    }
+
+    .quote-mark {
+      font-family: var(--font-serif);
+      font-size: 6rem;
+      line-height: 0.5;
+      color: var(--clr-accent);
+      opacity: 0.3;
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+
+    .quote-text {
+      font-family: var(--font-serif);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--clr-white);
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.5;
+    }
+
+    .quote-author {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      background: var(--clr-surface);
+      border-top: 1px solid var(--clr-border);
+      padding: 4rem 3rem 2rem;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .logo { font-size: 1.4rem; margin-bottom: 1rem; }
+
+    .footer-desc {
+      font-size: 0.82rem;
+      color: var(--clr-muted);
+      line-height: 1.7;
+      max-width: 260px;
+    }
+
+    .footer-col h4 {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--clr-text);
+      margin-bottom: 1.2rem;
+      font-weight: 500;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .footer-col ul li a {
+      font-size: 0.82rem;
+      color: var(--clr-muted);
+      transition: color var(--transition);
+    }
+
+    .footer-col ul li a:hover { color: var(--clr-accent); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid var(--clr-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-bottom p {
+      font-size: 0.75rem;
+      color: var(--clr-muted);
+    }
+
+    /* ─── Intersection Observer animations ──────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .lightbox-container { grid-template-columns: 1fr; max-width: 600px; }
+      .lightbox-info { text-align: center; }
+      .lightbox-tags { justify-content: center; }
+      .bio-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .bio-image-wrap { max-width: 400px; margin: 0 auto; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 0 1.5rem; }
+      nav { display: none; }
+      .section { padding: 4rem 1.5rem; }
+      .bio-section { padding: 4rem 1.5rem; }
+      .gallery-grid { columns: 2 160px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+      .lightbox-prev { left: 8px; }
+      .lightbox-next { right: 8px; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-grid { columns: 1; }
+      .hero-title { font-size: 2.8rem; }
+    }
+
+    /* ─── Loading shimmer on img before load ────────────────────── */
+    .gallery-item img {
+      background: linear-gradient(90deg, var(--clr-surface) 25%, #1f1f1f 50%, var(--clr-surface) 75%);
+      background-size: 200% 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <header>
+    <div class="logo">Lumi<span>ère</span></div>
+    <nav>
+      <a href="#gallery">Gallery</a>
+      <a href="#artist">Artist</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="btn" onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">
+      Explore
+    </button>
+  </header>
+
+  <!-- ── Hero ───────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Online Art Gallery · Est. 2024</p>
+      <h1 class="hero-title">Where Art<br /><em>Breathes</em></h1>
+      <p class="hero-subtitle">A curated collection of contemporary paintings, photography, and digital works from visionary artists around the world.</p>
+      <button class="btn" onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">
+        View Collection
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ── Stats ──────────────────────────────────────────────────── -->
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item reveal"><div class="stat-number">248</div><div class="stat-label">Artworks</div></div>
+      <div class="stat-item reveal"><div class="stat-number">36</div><div class="stat-label">Artists</div></div>
+      <div class="stat-item reveal"><div class="stat-number">12</div><div class="stat-label">Categories</div></div>
+      <div class="stat-item reveal"><div class="stat-number">18K</div><div class="stat-label">Collectors</div></div>
+    </div>
+  </div>
+
+  <!-- ── Gallery ────────────────────────────────────────────────── -->
+  <section class="section" id="gallery">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">The Collection</p>
+      <h2 class="section-title">Curated <em>Masterworks</em></h2>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Filter buttons -->
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All Works</button>
+      <button class="filter-btn" data-filter="painting">Painting</button>
+      <button class="filter-btn" data-filter="photography">Photography</button>
+      <button class="filter-btn" data-filter="digital">Digital Art</button>
+      <button class="filter-btn" data-filter="sculpture">Sculpture</button>
+      <button class="filter-btn" data-filter="abstract">Abstract</button>
+    </div>
+
+    <!-- Masonry Grid -->
+    <div class="gallery-grid" id="galleryGrid">
+
+      <div class="gallery-item" data-category="painting" data-id="0"
+           data-title="Golden Reverie" data-artist="Elena Marchetti" data-year="2023"
+           data-desc="A luminous study of light and memory, painted in layers of translucent gold and amber. Marchetti's signature brushwork creates a dreamlike atmosphere that invites prolonged contemplation."
+           data-tags="oil,canvas,contemporary">
+        <img src="https://picsum.photos/seed/art1/600/800" alt="Golden Reverie" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Golden Reverie</div>
+          <div class="overlay-meta">Painting · 2023</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="photography" data-id="1"
+           data-title="Silent Streets" data-artist="Kenji Watanabe" data-year="2022"
+           data-desc="Shot at 4 AM in an unnamed city, this photograph captures the peculiar emptiness of urban space between night and day. Watanabe's mastery of long exposure transforms familiar geometry into poetry."
+           data-tags="black-and-white,long-exposure,urban">
+        <img src="https://picsum.photos/seed/art2/600/750" alt="Silent Streets" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Silent Streets</div>
+          <div class="overlay-meta">Photography · 2022</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="digital" data-id="2"
+           data-title="Neon Bloom" data-artist="Zara Chen" data-year="2024"
+           data-desc="A generative digital composition exploring the tension between organic growth and algorithmic structure. Each render is unique, produced through a custom shader pipeline designed by the artist."
+           data-tags="generative,neon,digital">
+        <img src="https://picsum.photos/seed/art3/600/900" alt="Neon Bloom" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Neon Bloom</div>
+          <div class="overlay-meta">Digital Art · 2024</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="abstract" data-id="3"
+           data-title="Echoes in Blue" data-artist="Marcus Osei" data-year="2023"
+           data-desc="Inspired by West African percussion rhythms, Osei translates sound into visual cadence. The layered cobalt and indigo planes pulse with a musicality that transcends the static medium."
+           data-tags="acrylic,blue,rhythm">
+        <img src="https://picsum.photos/seed/art4/600/700" alt="Echoes in Blue" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Echoes in Blue</div>
+          <div class="overlay-meta">Abstract · 2023</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="sculpture" data-id="4"
+           data-title="The Weight of Air" data-artist="Ingrid Solberg" data-year="2021"
+           data-desc="Cast in bronze and polished to a mirror finish, this piece paradoxically captures the insubstantial. Solberg's forms hover between solid and void, questioning the boundaries of material existence."
+           data-tags="bronze,contemporary,minimalist">
+        <img src="https://picsum.photos/seed/art5/600/850" alt="The Weight of Air" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">The Weight of Air</div>
+          <div class="overlay-meta">Sculpture · 2021</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="painting" data-id="5"
+           data-title="Vermillion Horizon" data-artist="Elena Marchetti" data-year="2024"
+           data-desc="A departure from Marchetti's cooler palette, this work blazes with raw, gestural energy. Thick impasto strokes map an emotional landscape of longing and release against a burning sky."
+           data-tags="oil,impasto,sunset">
+        <img src="https://picsum.photos/seed/art6/600/780" alt="Vermillion Horizon" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Vermillion Horizon</div>
+          <div class="overlay-meta">Painting · 2024</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="photography" data-id="6"
+           data-title="Forest Cathedral" data-artist="Kenji Watanabe" data-year="2023"
+           data-desc="A morning mist rolls through ancient cedar columns in Yakushima, Japan. Watanabe spent three weeks camping to capture this singular, transient moment of light and atmosphere."
+           data-tags="nature,fog,japan">
+        <img src="https://picsum.photos/seed/art7/600/820" alt="Forest Cathedral" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Forest Cathedral</div>
+          <div class="overlay-meta">Photography · 2023</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="digital" data-id="7"
+           data-title="Circuit Dreams" data-artist="Zara Chen" data-year="2023"
+           data-desc="A meditation on the boundary between machine intelligence and human emotion. Chen's AI-assisted composition was created over six months of iterative dialogue between artist and algorithm."
+           data-tags="AI-assisted,tech,futurism">
+        <img src="https://picsum.photos/seed/art8/600/760" alt="Circuit Dreams" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Circuit Dreams</div>
+          <div class="overlay-meta">Digital Art · 2023</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="abstract" data-id="8"
+           data-title="Geometry of Loss" data-artist="Marcus Osei" data-year="2022"
+           data-desc="Sharp geometric forms collide and dissolve against fields of warm ochre and charcoal. The work emerged from Osei's engagement with themes of displacement and identity fragmentation."
+           data-tags="mixed-media,geometry,conceptual">
+        <img src="https://picsum.photos/seed/art9/600/900" alt="Geometry of Loss" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Geometry of Loss</div>
+          <div class="overlay-meta">Abstract · 2022</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="painting" data-id="9"
+           data-title="Midnight Garden" data-artist="Amara Diallo" data-year="2024"
+           data-desc="Painted entirely under artificial light, this nocturnal garden scene toys with perception and memory. The deep violet shadows seem to breathe, as though the garden is aware of its observer."
+           data-tags="oil,nocturne,flora">
+        <img src="https://picsum.photos/seed/art10/600/810" alt="Midnight Garden" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Midnight Garden</div>
+          <div class="overlay-meta">Painting · 2024</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="sculpture" data-id="10"
+           data-title="Liquid Marble" data-artist="Ingrid Solberg" data-year="2023"
+           data-desc="Solberg cuts and polishes Carrara marble to create forms that appear impossibly fluid. The contrast of the cold, rigid material and its apparently liquid form provokes wonder in every viewer."
+           data-tags="marble,classical,fluid">
+        <img src="https://picsum.photos/seed/art11/600/870" alt="Liquid Marble" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Liquid Marble</div>
+          <div class="overlay-meta">Sculpture · 2023</div>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="photography" data-id="11"
+           data-title="Salt Flats, Dawn" data-artist="Kenji Watanabe" data-year="2024"
+           data-desc="The Salar de Uyuni at first light becomes an infinite mirror. Watanabe's minimal composition strips away all but the essential — a thin horizon between two perfect worlds of sky."
+           data-tags="landscape,minimalism,reflection">
+        <img src="https://picsum.photos/seed/art12/600/730" alt="Salt Flats, Dawn" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="overlay-expand">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+          <div class="overlay-title">Salt Flats, Dawn</div>
+          <div class="overlay-meta">Photography · 2024</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Quote ──────────────────────────────────────────────────── -->
+  <div class="quote-section">
+    <span class="quote-mark">"</span>
+    <p class="quote-text">Art is not what you see, but what you make others see. Every brushstroke is a bridge between two inner worlds.</p>
+    <p class="quote-author">— Edgar Degas</p>
+  </div>
+
+  <!-- ── Artist Bio ─────────────────────────────────────────────── -->
+  <section class="bio-section" id="artist">
+    <div class="section-header reveal" style="margin-bottom:4rem;">
+      <p class="section-eyebrow">Featured Artist</p>
+      <h2 class="section-title">Meet the <em>Visionary</em></h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="bio-grid">
+      <div class="bio-image-wrap reveal">
+        <div class="bio-image-frame">
+          <img src="https://picsum.photos/seed/artist1/600/800" alt="Elena Marchetti" />
+        </div>
+        <div class="bio-image-accent"></div>
+        <div class="bio-badge">
+          <span style="font-size:1.3rem">✦</span>
+          <span style="margin-top:2px">Artist</span>
+        </div>
+      </div>
+
+      <div class="bio-content reveal">
+        <p class="bio-eyebrow">Featured Artist · Florence, Italy</p>
+        <h2 class="bio-name">Elena Marchetti</h2>
+        <p class="bio-title-role">Painter · Mixed Media · Visual Poet</p>
+
+        <p class="bio-text">
+          Born in Florence and trained at the Accademia di Belle Arti, Elena Marchetti spent her formative years absorbing the Renaissance masters before deliberately dismantling their influence in her own practice.
+        </p>
+        <p class="bio-text">
+          Her work occupies the liminal space between representation and abstraction — a place where memory, light, and material converge into something that defies easy categorisation. Each canvas is built up over weeks of layering and erasure, creating surfaces of extraordinary depth and luminosity.
+        </p>
+
+        <div class="bio-awards">
+          <div class="award-item">
+            <div class="award-icon">🏆</div>
+            <div class="award-text">
+              <strong>Premio Nazionale delle Arti, 2023</strong>
+              Italian Ministry of Culture — Best Emerging Artist
+            </div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon">🎨</div>
+            <div class="award-text">
+              <strong>Venice Biennale Participant, 2022</strong>
+              Italian Pavilion — International Representation
+            </div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon">🌍</div>
+            <div class="award-text">
+              <strong>Saatchi Gallery Solo Exhibition, 2024</strong>
+              London — "Luminous Residue" — 14 New Works
+            </div>
+          </div>
+        </div>
+
+        <div class="bio-socials">
+          <button class="social-btn" title="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </button>
+          <button class="social-btn" title="Twitter/X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0012 8v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+          </button>
+          <button class="social-btn" title="Website">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </button>
+          <button class="social-btn" title="Email">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer id="contact">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Lumi<span>ère</span></div>
+        <p class="footer-desc">A curated online gallery celebrating the breadth and depth of contemporary art from emerging and established artists worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Gallery</h4>
+        <ul>
+          <li><a href="#">All Works</a></li>
+          <li><a href="#">Painting</a></li>
+          <li><a href="#">Photography</a></li>
+          <li><a href="#">Digital Art</a></li>
+          <li><a href="#">Sculpture</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Artists</a></li>
+          <li><a href="#">Exhibitions</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Collect</h4>
+        <ul>
+          <li><a href="#">Buying Guide</a></li>
+          <li><a href="#">Commissions</a></li>
+          <li><a href="#">Authentication</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Lumière Art Gallery. All rights reserved.</p>
+      <p>Crafted with passion for art and technology.</p>
+    </div>
+  </footer>
+
+  <!-- ── Lightbox ────────────────────────────────────────────────── -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork detail">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-container">
+      <div class="lightbox-img-wrap">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous artwork">‹</button>
+        <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next artwork">›</button>
+        <img id="lightboxImg" src="" alt="" />
+      </div>
+      <div class="lightbox-info">
+        <p class="lightbox-category" id="lightboxCategory"></p>
+        <h2 class="lightbox-title" id="lightboxTitle"></h2>
+        <p class="lightbox-artist" id="lightboxArtist"></p>
+        <p class="lightbox-description" id="lightboxDesc"></p>
+        <div class="lightbox-tags" id="lightboxTags"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── JavaScript ─────────────────────────────────────────────── -->
+  <script>
+    // ── Gallery data mirror (read from DOM) ─────────────────────
+    const galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+    let currentIndex = 0;
+    let visibleItems = [...galleryItems];
+
+    function getVisibleItems() {
+      return galleryItems.filter(el => !el.classList.contains('hidden'));
+    }
+
+    // ── Filter logic ────────────────────────────────────────────
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+
+        galleryItems.forEach((item, i) => {
+          const match = filter === 'all' || item.dataset.category === filter;
+          if (match) {
+            item.classList.remove('hidden');
+            item.style.animation = 'none';
+            item.offsetHeight; // reflow
+            item.style.animation = `fadeUp 0.5s ease ${(i % 6) * 0.07}s both`;
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // ── Open Lightbox ───────────────────────────────────────────
+    function openLightbox(item) {
+      visibleItems = getVisibleItems();
+      currentIndex = visibleItems.indexOf(item);
+
+      populateLightbox(item);
+
+      const lb = document.getElementById('lightbox');
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      // focus trap
+      document.getElementById('lightboxClose').focus();
+    }
+
+    function populateLightbox(item) {
+      const img = item.querySelector('img');
+      document.getElementById('lightboxImg').src = img.src;
+      document.getElementById('lightboxImg').alt = img.alt;
+      document.getElementById('lightboxTitle').textContent = item.dataset.title;
+      document.getElementById('lightboxCategory').textContent =
+        item.dataset.category.charAt(0).toUpperCase() + item.dataset.category.slice(1)
+        + ' · ' + item.dataset.year;
+      document.getElementById('lightboxArtist').textContent = 'by ' + item.dataset.artist;
+      document.getElementById('lightboxDesc').textContent = item.dataset.desc;
+
+      const tagsEl = document.getElementById('lightboxTags');
+      tagsEl.innerHTML = '';
+      item.dataset.tags.split(',').forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'tag';
+        span.textContent = tag.trim();
+        tagsEl.appendChild(span);
+      });
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function navigate(dir) {
+      visibleItems = getVisibleItems();
+      currentIndex = (currentIndex + dir + visibleItems.length) % visibleItems.length;
+      const item = visibleItems[currentIndex];
+
+      // Fade out → in transition
+      const imgEl = document.getElementById('lightboxImg');
+      imgEl.style.opacity = '0';
+      imgEl.style.transform = `translateX(${dir > 0 ? '30px' : '-30px'})`;
+      imgEl.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+
+      setTimeout(() => {
+        populateLightbox(item);
+        imgEl.style.opacity = '1';
+        imgEl.style.transform = 'translateX(0)';
+      }, 220);
+    }
+
+    // Event listeners ────────────────────────────────────────────
+    galleryItems.forEach(item => {
+      item.addEventListener('click', () => openLightbox(item));
+    });
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxBackdrop').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxPrev').addEventListener('click', (e) => { e.stopPropagation(); navigate(-1); });
+    document.getElementById('lightboxNext').addEventListener('click', (e) => { e.stopPropagation(); navigate(1); });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      const lb = document.getElementById('lightbox');
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
+    });
+
+    // ── Scroll-reveal (Intersection Observer) ───────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ── Animated counter ────────────────────────────────────────
+    function animateCounter(el, target, suffix = '') {
+      const duration = 1800;
+      const start = performance.now();
+      const startVal = 0;
+
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(startVal + (target - startVal) * eased);
+        el.textContent = current + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    // Trigger counters when stats section visible
+    const statsSection = document.querySelector('.stats-section');
+    const statNumbers = document.querySelectorAll('.stat-number');
+    const targets = [248, 36, 12, 18];
+    const suffixes = ['', '', '', 'K'];
+    let counted = false;
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !counted) {
+          counted = true;
+          statNumbers.forEach((el, i) => {
+            animateCounter(el, targets[i], suffixes[i]);
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+
+    statsObserver.observe(statsSection);
+
+    // ── Header scroll effect ─────────────────────────────────────
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        header.style.borderBottomColor = 'rgba(201,169,110,0.15)';
+      } else {
+        header.style.borderBottomColor = 'var(--clr-border)';
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>
